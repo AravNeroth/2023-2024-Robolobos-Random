@@ -1,4 +1,4 @@
 ## NOTICE
 
-This extremely cool has all the public FTC Team 14363's code.
+This extremely cool repository has all code that's running the Cedar Park FTC Team 14363's robot.
 We love capybaras ong 
