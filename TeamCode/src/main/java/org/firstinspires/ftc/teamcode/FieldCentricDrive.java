@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
-
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.*;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
+import org.firstinspires.ftc.teamcode.subsystems.Wheels;
 
 /*
     The reason why this class has OpMode instead of LinearOpMode is because
@@ -15,25 +17,35 @@ import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 
 
 @TeleOp(name="FieldCentricDrive", group="DriveModes")
-public abstract class FieldCentricDrive extends LinearOpMode {
+public abstract class FieldCentricDrive extends OpMode {
 
     // sets controller colors- find in Subsystem ControllerLights
-    ControllerFeatures lights = new ControllerFeatures();
+    ControllerFeatures features = new ControllerFeatures();
+    Wheels wheels = new Wheels();
+
 
     @Override
-    public void runOpMode() throws InterruptedException {
-
-
-
-        waitForStart();
-
-        if (isStopRequested())
-            return;
-
-        while (opModeIsActive()) {
-
-
-        }
+    public void init(){
 
     }
+
+
+    @Override
+    public void init_loop(){
+
+    }
+    
+    @Override
+    public void stop()
+    {
+    }
+
+    @Override
+    public void loop()
+    {
+
+    }
+
+
+
 }
