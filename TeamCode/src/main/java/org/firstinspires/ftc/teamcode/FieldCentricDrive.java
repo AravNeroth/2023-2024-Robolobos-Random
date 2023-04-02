@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.ControllerLights;
+import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 
 /*
     The reason why this class has OpMode instead of LinearOpMode is because
@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ControllerLights;
 public abstract class FieldCentricDrive extends LinearOpMode {
 
     // sets controller colors- find in Subsystem ControllerLights
-    ControllerLights lights = new ControllerLights();
+    ControllerFeatures lights = new ControllerFeatures();
 
     @Override
     public void runOpMode() throws InterruptedException {
