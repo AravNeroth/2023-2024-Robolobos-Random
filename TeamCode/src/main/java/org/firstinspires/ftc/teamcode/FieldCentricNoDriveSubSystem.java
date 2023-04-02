@@ -36,6 +36,11 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         // Without this, data retrieving from the IMU throws an exception
         imu.initialize(parameters);
 
+        ControllerFeatures feature = new ControllerFeatures();
+
+        // rumbles on initialization
+        feature.rumbleOnStart();
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -43,7 +48,6 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         while(opModeIsActive()) {
 
             // sets controller colors- find in Subsystem ControllerLights
-            ControllerFeatures feature = new ControllerFeatures();
             feature.setRainbow();
 
             // imu reset is dpad up

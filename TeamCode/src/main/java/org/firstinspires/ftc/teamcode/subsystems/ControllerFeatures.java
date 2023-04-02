@@ -88,11 +88,7 @@ public class ControllerFeatures {
     }
 
 
-
-
-
-
-    public void startRumble(){
+    public void rumbleOnStart(){
         gamepad1.runRumbleEffect(startUp);
         gamepad2.runRumbleEffect(startUp);
     }
