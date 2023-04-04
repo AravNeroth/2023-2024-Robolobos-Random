@@ -55,7 +55,10 @@ public class ControllerFeatures {
             .addStep(0.5, 0.0, 800)  //  Rumble left motor 50% for 800 mSec
             .addStep(0.0, 0.0, 500)  //  Pause for 500 mSec
             .addStep(1.0, 1.0, 1250)  //  Rumble both motors 100% for 1.25 Sec
+            .addStep(0.0, 0.0, 2000)  //  Pause for 2000 mSec
+
             .build();
+
 
     public void setRainbow(){
         gamepad1.runLedEffect(rainbowManual);

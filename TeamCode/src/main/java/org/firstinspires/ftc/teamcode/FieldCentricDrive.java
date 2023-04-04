@@ -3,8 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+//import org.firstinspires.ftc.teamcode.commands.VoltageReader;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 import org.firstinspires.ftc.teamcode.subsystems.Wheels;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 /*
     The reason why this class has OpMode instead of LinearOpMode is because
@@ -21,11 +26,23 @@ public abstract class FieldCentricDrive extends OpMode {
     // sets controller colors- find in Subsystem ControllerLights
     ControllerFeatures features = new ControllerFeatures();
     Wheels wheels = new Wheels();
+    //private VoltageReader voltage;
 
-
+    private ElapsedTime runTime;
     @Override
     public void init(){
+        runTime = new ElapsedTime();
 
+
+        features.rumbleOnStart();
+        features.setRainbow();
+
+        // this aint working fsr
+    //    voltage = new VoltageReader(hardwareMap);
+
+        telemetry.addLine("Initialization Completed Successfully");
+        telemetry.addLine("Time taken: " + getRuntime()+ " ms");
+        telemetry.update();
     }
 
 
@@ -42,6 +59,9 @@ public abstract class FieldCentricDrive extends OpMode {
     @Override
     public void loop()
     {
+
+        // multplier for the wheels- currently running @ 80%
+        wheels.fieldCentric(0.8);
 
     }
 

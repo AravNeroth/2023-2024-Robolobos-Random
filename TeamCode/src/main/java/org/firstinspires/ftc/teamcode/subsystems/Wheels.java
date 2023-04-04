@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys.*;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -37,14 +39,22 @@ public class Wheels{
     parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
     // Without this, data retrieving from the IMU throws an exception
         imu.initialize(parameters);
+
+        // now you may be a lil confused- why is this here again?
+        // if this code runs, then it'll rerun the line where it makes a new
+        // IMU paramater, making it blank, so it resets it
+        if(gamepad1.dpad_up == true){
+            imu.initialize(parameters);
+        }
+
     }
 
 
-    public void fieldCentric(GamepadEx controller, double mult){
+    public void fieldCentric(double mult){
 
-        double y = controller.getLeftY();
-        double x = -controller.getLeftX();
-        double rx = -controller.getRightX();
+        double y = gamepad1.left_stick_y;
+        double x = -gamepad1.left_stick_x;
+        double rx = -gamepad1.right_stick_x;
 
         double botHeading = -imu.getAngularOrientation().firstAngle;
 
