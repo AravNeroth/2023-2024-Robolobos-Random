@@ -90,6 +90,11 @@ public class ControllerFeatures {
 
     }
 
+    public void lightRumble(int ms){
+        gamepad1.rumble(0.15, 0.15, ms);
+        gamepad2.rumble(0.15, 0.15, ms);
+
+    }
 
     public void rumbleOnStart(){
         gamepad1.runRumbleEffect(startUp);

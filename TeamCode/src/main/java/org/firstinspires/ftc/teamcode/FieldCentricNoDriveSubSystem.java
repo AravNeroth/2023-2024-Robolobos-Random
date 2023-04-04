@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
@@ -10,12 +12,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 @TeleOp(name="FieldCentricNoDriveSubSystem", group="DriveModes")
 public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
     // this changes the speed multiplier for wheels
-    int mult = 1;
+    double mult = 0.75;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,6 +43,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
         // rumbles on initialization
         feature.rumbleOnStart();
+        feature.setPink(10);
 
         waitForStart();
 
@@ -81,13 +85,24 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
             // controllers will rumble and speed will be set to max if right trigger is held
             // controllers will also change lights depending on what trigger is held
 
+            if(gamepad1.left_trigger > 1){
+                mult = 1;
+                feature.lightRumble(500);
+            }
+
+            else if(gamepad1.right_trigger > 1){
+                mult = 0.5;
+            }
+
+            else{
+                mult = 0.75;
+            }
 
 
-
-            FL.setPower(frontLeftPower);
-            BL.setPower(backLeftPower);
-            FR.setPower(frontRightPower);
-            BR.setPower(backRightPower);
+            FL.setPower(mult * frontLeftPower);
+            BL.setPower(mult * backLeftPower);
+            FR.setPower(mult * frontRightPower);
+            BR.setPower(mult * backRightPower);
 
         }
 
