@@ -19,6 +19,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
     // this changes the speed multiplier for wheels
     double mult = 0.75;
+    private GamepadEx pilot, sentry;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,6 +32,9 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        pilot = new GamepadEx(gamepad1);
+        sentry = new GamepadEx(gamepad2);
+
         // imports the IMU
         BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -42,8 +46,8 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         ControllerFeatures feature = new ControllerFeatures();
 
         // rumbles on initialization
-        feature.rumbleOnStart();
-        feature.setPink(10);
+        feature.rumbleOnStart(gamepad1, gamepad2);
+        feature.setPink(gamepad1, gamepad2, 10);
 
         waitForStart();
 
@@ -52,7 +56,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         while(opModeIsActive()) {
 
             // sets controller colors- find in Subsystem ControllerLights
-            feature.setRainbow();
+            feature.setRainbow(gamepad1, gamepad2);
 
             // imu reset is dpad up
             if (gamepad1.dpad_up) {
@@ -87,7 +91,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
             if(gamepad1.left_trigger > 0.8){
                 mult = 1;
-                feature.lightRumble(500);
+                feature.lightRumble(gamepad1, gamepad2, 500);
             }
 
             else if(gamepad1.right_trigger > 0.8){

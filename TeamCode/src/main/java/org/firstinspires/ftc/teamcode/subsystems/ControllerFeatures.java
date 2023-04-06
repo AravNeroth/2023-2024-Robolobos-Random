@@ -50,9 +50,9 @@ public class ControllerFeatures {
 
     // startup build. rumbles right, then left, then both
     Gamepad.RumbleEffect startUp = new Gamepad.RumbleEffect.Builder()
-            .addStep(0.0, 0.5, 800)  //  Rumble right motor 50% for 800 mSec
+            .addStep(0.0, 0.75, 800)  //  Rumble right motor 75% for 800 mSec
             .addStep(0.0, 0.0, 500)  //  Pause for 500 mSec
-            .addStep(0.5, 0.0, 800)  //  Rumble left motor 50% for 800 mSec
+            .addStep(0.75, 0.0, 800)  //  Rumble left motor 75% for 800 mSec
             .addStep(0.0, 0.0, 500)  //  Pause for 500 mSec
             .addStep(1.0, 1.0, 1250)  //  Rumble both motors 100% for 1.25 Sec
             .addStep(0.0, 0.0, 2000)  //  Pause for 2000 mSec
@@ -60,44 +60,45 @@ public class ControllerFeatures {
             .build();
 
 
-    public void setRainbow(){
-        gamepad1.runLedEffect(rainbowManual);
-        gamepad2.runLedEffect(rainbowManual);
+    public void setRainbow(Gamepad controller1, Gamepad controller2){
+        controller1.runLedEffect(rainbowManual);
+        controller2.runLedEffect(rainbowManual);
     }
 
-    public void setPurple(int seconds){
+    public void setPurple(Gamepad controller1, Gamepad controller2, int seconds){
         ms = (seconds * 1000);
-        gamepad1.setLedColor(102, 0, 204, ms);
-        gamepad2.setLedColor(102, 0, 204, ms);
+        controller1.setLedColor(102, 0, 204, ms);
+        controller2.setLedColor(102, 0, 204, ms);
     }
 
-    public void setBlue(int seconds){
+    public void setBlue(Gamepad controller1, Gamepad controller2, int seconds){
         ms = (seconds * 1000);
-        gamepad1.setLedColor(0, 0, 55, ms);
-        gamepad2.setLedColor(0, 0, 55, ms);
+        controller1.setLedColor(0, 0, 55, ms);
+        controller2.setLedColor(0, 0, 55, ms);
     }
 
-    public void setGreen(int seconds){
+    public void setGreen(Gamepad controller1, Gamepad controller2, int seconds){
         ms = (seconds * 1000);
-        gamepad1.setLedColor(0, 100, 0, ms);
-        gamepad2.setLedColor(0, 100, 0, ms);
+        controller1.setLedColor(0, 100, 0, ms);
+        controller2.setLedColor(0, 100, 0, ms);
     }
 
-    public void setPink(int seconds){
+    public void setPink(Gamepad controller1, Gamepad controller2, int seconds){
         ms = (seconds * 1000);
-        gamepad1.setLedColor(255, 51, 255, ms);
-        gamepad2.setLedColor(255, 51, 255, ms);
+        controller1.setLedColor(255, 51, 255, ms);
+        controller2.setLedColor(255, 51, 255, ms);
 
     }
 
-    public void lightRumble(int ms){
-        gamepad1.rumble(0.15, 0.15, ms);
-        gamepad2.rumble(0.15, 0.15, ms);
+    public void lightRumble(Gamepad controller1, Gamepad controller2, int ms){
+        controller1.rumble(0.15, 0.15, ms);
+        controller2.rumble(0.15, 0.15, ms);
 
     }
 
-    public void rumbleOnStart(){
-        gamepad1.runRumbleEffect(startUp);
-        gamepad2.runRumbleEffect(startUp);
+    public void rumbleOnStart(Gamepad controller1, Gamepad controller2){
+
+        controller1.runRumbleEffect(startUp);
+        controller2.runRumbleEffect(startUp);
     }
 }

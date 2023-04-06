@@ -36,8 +36,8 @@ public abstract class FieldCentricDrive extends OpMode {
         runTime = new ElapsedTime();
 
 
-        features.rumbleOnStart();
-        features.setRainbow();
+        features.rumbleOnStart(gamepad1, gamepad2);
+        features.setRainbow(gamepad1, gamepad2);
 
         // this aint working fsr
     //    voltage = new VoltageReader(hardwareMap);
@@ -52,7 +52,7 @@ public abstract class FieldCentricDrive extends OpMode {
     {
         if(gamepad1.left_trigger > 1){
             mult = 1;
-            features.lightRumble(500);
+            features.lightRumble(gamepad1, gamepad2, 100);
         }
 
         else if(gamepad1.right_trigger > 1){
