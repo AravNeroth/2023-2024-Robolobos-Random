@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.lin
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.*;
+import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,7 +19,7 @@ DISCLAIMER- I HAVE NO IDEA WHAT IM DOING
  */
 public class Wheels{
 
-    BNO055IMU imu;
+    private RevIMU imu;
 
     DcMotor FL = hardwareMap.dcMotor.get("front left");
     DcMotor BL = hardwareMap.dcMotor.get("back left");
@@ -32,21 +33,22 @@ public class Wheels{
 
     //IMU
     // Retrieve the IMU from the hardware map
-    imu = hardwareMap.get(BNO055IMU.class, "imu");
+    imu = (RevIMU) hardwareMap.get(BNO055IMU.class, "imu");
     // this is making a new object called 'parameters' that we use to hold the angle the imu is at
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     // Technically this is the default, however specifying it is clearer
     parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
     // Without this, data retrieving from the IMU throws an exception
-        imu.initialize(parameters);
+        imu.init();
 
         // now you may be a lil confused- why is this here again?
         // if this code runs, then it'll rerun the line where it makes a new
         // IMU paramater, making it blank, so it resets it
-        if(gamepad1.dpad_up == true){
-            imu.initialize(parameters);
-        }
 
+    }
+
+    public void resetIMU(){
+        imu.reset();
     }
 
 
@@ -56,7 +58,7 @@ public class Wheels{
         double x = -gamepad1.left_stick_x;
         double rx = -gamepad1.right_stick_x;
 
-        double botHeading = -imu.getAngularOrientation().firstAngle;
+        double botHeading = Math.toRadians(imu.getHeading()+180);
 
         double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
         double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);

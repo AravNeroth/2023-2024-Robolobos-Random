@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -61,6 +63,8 @@ public abstract class FieldCentricDrive extends OpMode {
             mult = 0.70;
         }
 
+        if(gamepad1.dpad_up){
+        }
         // multplier for the wheels- currently running @ 70%
         wheels.fieldCentric(mult);
 

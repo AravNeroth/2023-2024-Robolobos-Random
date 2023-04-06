@@ -85,12 +85,12 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
             // controllers will rumble and speed will be set to max if right trigger is held
             // controllers will also change lights depending on what trigger is held
 
-            if(gamepad1.left_trigger > 1){
+            if(gamepad1.left_trigger > 0.8){
                 mult = 1;
                 feature.lightRumble(500);
             }
 
-            else if(gamepad1.right_trigger > 1){
+            else if(gamepad1.right_trigger > 0.8){
                 mult = 0.5;
             }
 
