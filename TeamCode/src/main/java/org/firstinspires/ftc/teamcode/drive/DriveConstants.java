@@ -18,11 +18,21 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 @Config
 public class DriveConstants {
 
+    // Arav- this MIGHT be correct or really really wrong
     /*
-     * These are motor constants that should be listed online for your motors.
+        basically, 1 tick is 1/64 of 1 revolution
+        1 rev is the circumference of the wheel
+
+        circumference = pi * r^2 (we use 100mm wheels?)
+        C = pi * 3.3970^2 (1 in = 25.4mm)
+        C = 3.14 * 11.5396
+        C = 36.2343 in
+
+        1 tick is 1/64 of 1 rev / 1C
+        1 tick = 0.5661
      */
-    public static final double TICKS_PER_REV = 1;
-    public static final double MAX_RPM = 1;
+    public static final double TICKS_PER_REV = 0.5661;
+    public static final double MAX_RPM = 435;
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
