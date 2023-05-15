@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,7 +12,12 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
+import org.firstinspires.ftc.teamcode.subsystems.Slides;
+import org.firstinspires.ftc.teamcode.subsystems.Turrent;
+
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 @TeleOp(name="FieldCentricNoDriveSubSystem", group="DriveModes")
@@ -19,9 +25,6 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
     // this changes the speed multiplier for wheels
     double mult = 0.75;
-    private GamepadEx pilot, sentry;
-
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,11 +34,23 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         DcMotor FR = hardwareMap.dcMotor.get("rightFront");
         DcMotor BR = hardwareMap.dcMotor.get("rightRear");
 
+        DcMotor turrent = hardwareMap.dcMotor.get("turrent");
+
+        CRServoImplEx slide = hardwareMap.get(CRServoImplEx.class, "slide");
+
+        CRServoImplEx leftClaw = hardwareMap.get(CRServoImplEx.class, "leftClaw");
+        CRServoImplEx rightClaw = hardwareMap.get(CRServoImplEx.class, "rightClaw");
+
+
+
+
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pilot = new GamepadEx(gamepad1);
-        sentry = new GamepadEx(gamepad2);
+        Turrent turrentSub = new Turrent(turrent);
+        Slides slides = new Slides(slide);
+        Claw claw = new Claw(leftClaw, rightClaw);
+
 
         // imports the IMU
         BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
