@@ -34,7 +34,9 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         DcMotor FR = hardwareMap.dcMotor.get("rightFront");
         DcMotor BR = hardwareMap.dcMotor.get("rightRear");
 
-        DcMotor turrent = hardwareMap.dcMotor.get("turrent");
+        DcMotor zTurrent = hardwareMap.dcMotor.get("zTurrent");
+        DcMotor yTurrent = hardwareMap.dcMotor.get("yTurrent");
+
 
         CRServoImplEx slide = hardwareMap.get(CRServoImplEx.class, "slide");
 
@@ -47,7 +49,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        Turrent turrentSub = new Turrent(turrent);
+        Turrent turrent = new Turrent(zTurrent, yTurrent);
         Slides slides = new Slides(slide);
         Claw claw = new Claw(leftClaw, rightClaw);
 

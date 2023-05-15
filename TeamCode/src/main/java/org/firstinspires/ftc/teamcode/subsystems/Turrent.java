@@ -4,8 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Turrent {
-    private DcMotor turrent;
-    public Turrent(DcMotor turrent){
-        this.turrent = turrent;
+    private DcMotor zTurrent;
+    private DcMotor yTurrent;
+
+    public Turrent(DcMotor zTurrent, DcMotor yTurrent){
+        this.zTurrent = zTurrent;
+        this.yTurrent = yTurrent;
+
     }
 }
