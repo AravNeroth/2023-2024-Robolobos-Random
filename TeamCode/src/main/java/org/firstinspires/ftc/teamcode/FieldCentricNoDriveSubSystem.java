@@ -1,24 +1,16 @@
 package org.firstinspires.ftc.teamcode;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 
+import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
-import org.firstinspires.ftc.teamcode.subsystems.Slides;
 import org.firstinspires.ftc.teamcode.subsystems.Turrent;
-
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 @TeleOp(name="FieldCentricNoDriveSubSystem", group="DriveModes")
 public class FieldCentricNoDriveSubSystem extends LinearOpMode{
@@ -34,8 +26,8 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         DcMotor FR = hardwareMap.dcMotor.get("rightFront");
         DcMotor BR = hardwareMap.dcMotor.get("rightRear");
 
-        DcMotor zTurrent = hardwareMap.dcMotor.get("zTurrent");
-        DcMotor yTurrent = hardwareMap.dcMotor.get("yTurrent");
+        DcMotor turrentRot = hardwareMap.dcMotor.get("turrent");
+        DcMotor turrentArm = hardwareMap.dcMotor.get("arm");
 
 
         CRServoImplEx slide = hardwareMap.get(CRServoImplEx.class, "slide");
@@ -49,7 +41,8 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        Turrent turrent = new Turrent(zTurrent, yTurrent);
+        Turrent turrent = new Turrent(turrentRot);
+        Arm arm = new Arm(turrentArm);
         Slides slides = new Slides(slide);
         Claw claw = new Claw(leftClaw, rightClaw);
 
