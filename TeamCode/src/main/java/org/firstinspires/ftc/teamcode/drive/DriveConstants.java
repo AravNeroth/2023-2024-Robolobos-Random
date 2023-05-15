@@ -69,7 +69,7 @@ public class DriveConstants {
     // theoretically should be 86ish, but due to battery levels and other real world things,
     // so always make Max Vel to be something the robot can hit consistently
     // use the Max Vel tuner on the dashboard and multiply it by 0.9
-    public static double MAX_VEL = 40;  
+    public static double MAX_VEL = 40;
     public static double MAX_ACCEL = 40;
     public static double MAX_ANG_VEL = Math.toRadians(180);
     public static double MAX_ANG_ACCEL = Math.toRadians(180);
