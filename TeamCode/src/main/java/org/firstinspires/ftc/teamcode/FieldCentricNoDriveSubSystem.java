@@ -21,13 +21,15 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
     double mult = 0.75;
     private GamepadEx pilot, sentry;
 
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor FL = hardwareMap.dcMotor.get("front left");
-        DcMotor BL = hardwareMap.dcMotor.get("back left");
-        DcMotor FR = hardwareMap.dcMotor.get("front right");
-        DcMotor BR = hardwareMap.dcMotor.get("back right");
+        DcMotor FL = hardwareMap.dcMotor.get("leftFront");
+        DcMotor BL = hardwareMap.dcMotor.get("leftRear");
+        DcMotor FR = hardwareMap.dcMotor.get("rightFront");
+        DcMotor BR = hardwareMap.dcMotor.get("rightRear");
 
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
