@@ -12,4 +12,10 @@ public class Turrent {
         this.yTurrent = yTurrent;
 
     }
+
+    public void turnRight() {
+
+        zTurrent.setPower(1);
+
+    }
 }
