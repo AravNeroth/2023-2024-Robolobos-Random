@@ -19,18 +19,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class DriveConstants {
 
     // Arav- this MIGHT be correct or really really wrong
-    /*
-        basically, 1 tick is 1/64 of 1 revolution
-        1 rev is the circumference of the wheel
 
-        circumference = pi * r^2 (we use 100mm wheels?)
-        C = pi * 3.3970^2 (1 in = 25.4mm)
-        C = 3.14 * 11.5396
-        C = 36.2343 in
-
-        1 tick is 1/64 of 1 rev / 1C
-        1 tick = 0.5661
-     */
     public static final double TICKS_PER_REV = 384.53979;
     public static final double MAX_RPM = 435;
 
@@ -75,10 +64,15 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 30;
-    public static double MAX_ACCEL = 30;
-    public static double MAX_ANG_VEL = Math.toRadians(60);
-    public static double MAX_ANG_ACCEL = Math.toRadians(60);
+
+
+    // theoretically should be 86ish, but due to battery levels and other real world things,
+    // so always make Max Vel to be something the robot can hit consistently
+    // use the Max Vel tuner on the dashboard and multiply it by 0.9
+    public static double MAX_VEL = 40;  
+    public static double MAX_ACCEL = 40;
+    public static double MAX_ANG_VEL = Math.toRadians(180);
+    public static double MAX_ANG_ACCEL = Math.toRadians(180);
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
