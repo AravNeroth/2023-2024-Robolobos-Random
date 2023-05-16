@@ -40,11 +40,6 @@ public class Wheels{
     parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
     // Without this, data retrieving from the IMU throws an exception
         imu.init();
-
-        // now you may be a lil confused- why is this here again?
-        // if this code runs, then it'll rerun the line where it makes a new
-        // IMU paramater, making it blank, so it resets it
-
     }
 
     public void resetIMU(){

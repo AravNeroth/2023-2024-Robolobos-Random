@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Turrent {
-    private DcMotor turrent;
-
-    public Turrent(DcMotor turrent){
-        this.turrent = turrent;
-    }
-
+    DcMotor turrentRot = hardwareMap.dcMotor.get("turrent");
     public void turnRight() {
-        turrent.setPower(1);
+        turrentRot.setPower(1);
     }
 
     public void turnLeft() {
-        turrent.setPower(-1);
+        turrentRot.setPower(-1);
     }
 }

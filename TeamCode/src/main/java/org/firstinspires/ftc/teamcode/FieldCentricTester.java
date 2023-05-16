@@ -7,13 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.subsystems.Arm;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
-import org.firstinspires.ftc.teamcode.subsystems.Turrent;
 
 @TeleOp(name="FieldCentricNoDriveSubSystem", group="DriveModes")
-public class FieldCentricNoDriveSubSystem extends LinearOpMode{
+public class FieldCentricTester extends LinearOpMode{
 
     // this changes the speed multiplier for wheels
     double mult = 0.75;
@@ -26,11 +23,8 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         DcMotor FR = hardwareMap.dcMotor.get("rightFront");
         DcMotor BR = hardwareMap.dcMotor.get("rightRear");
 
-        DcMotor turrentRot = hardwareMap.dcMotor.get("turrent");
-        DcMotor turrentArm = hardwareMap.dcMotor.get("arm");
 
 
-        CRServoImplEx slide = hardwareMap.get(CRServoImplEx.class, "slide");
 
         CRServoImplEx leftClaw = hardwareMap.get(CRServoImplEx.class, "leftClaw");
         CRServoImplEx rightClaw = hardwareMap.get(CRServoImplEx.class, "rightClaw");
@@ -40,11 +34,6 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        Turrent turrent = new Turrent(turrentRot);
-        Arm arm = new Arm(turrentArm);
-        Slides slides = new Slides(slide);
-        Claw claw = new Claw(leftClaw, rightClaw);
 
 
         // imports the IMU

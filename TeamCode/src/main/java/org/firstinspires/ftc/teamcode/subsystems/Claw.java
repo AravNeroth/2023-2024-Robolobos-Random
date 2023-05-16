@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class Claw {
-    private CRServoImplEx leftClaw, rightClaw;
-    public Claw(CRServoImplEx leftClaw, CRServoImplEx rightClaw){
-        this.leftClaw = leftClaw;
-        this.rightClaw = rightClaw;
-    }
+    CRServoImplEx leftClaw = hardwareMap.get(CRServoImplEx.class, "leftClaw");
+    CRServoImplEx rightClaw = hardwareMap.get(CRServoImplEx.class, "rightClaw");
+
 }

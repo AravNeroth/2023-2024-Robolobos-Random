@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 //import org.firstinspires.ftc.teamcode.commands.VoltageReader;
+import org.firstinspires.ftc.teamcode.subsystems.Arm;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 import org.firstinspires.ftc.teamcode.subsystems.Wheels;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 /*
     The reason why this class has OpMode instead of LinearOpMode is because
@@ -20,15 +16,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
     to constantly update the IMU inside the subsystem. In LinearOpMode, the
     equivalent would be to update the IMU in the "opModeIsActive" method
  */
-
-
 @TeleOp(name="FieldCentricDrive", group="DriveModes")
-public abstract class FieldCentricDrive extends OpMode {
+public abstract class FieldCentricTeleOp extends OpMode {
 
     double mult = 0.70;
     // sets controller colors- find in Subsystem ControllerLights
-    ControllerFeatures features = new ControllerFeatures();
     Wheels wheels = new Wheels();
+    Arm arm = new Arm();
+    Claw claw = new Claw();
+    ControllerFeatures features = new ControllerFeatures();
+
     //private VoltageReader voltage;
     private ElapsedTime runTime;
     @Override
@@ -64,6 +61,7 @@ public abstract class FieldCentricDrive extends OpMode {
         }
 
         if(gamepad1.dpad_up){
+            wheels.resetIMU();
         }
         // multplier for the wheels- currently running @ 70%
         wheels.fieldCentric(mult);
