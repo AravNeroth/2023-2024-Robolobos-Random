@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
+import org.firstinspires.ftc.teamcode.subsystems.Turrent;
 import org.firstinspires.ftc.teamcode.subsystems.Wheels;
 
 /*
@@ -24,6 +25,7 @@ public abstract class FieldCentricTeleOp extends OpMode {
     Wheels wheels = new Wheels();
     Arm arm = new Arm();
     Claw claw = new Claw();
+    Turrent turret = new Turrent();
     ControllerFeatures features = new ControllerFeatures();
 
     //private VoltageReader voltage;
@@ -34,7 +36,7 @@ public abstract class FieldCentricTeleOp extends OpMode {
 
 
         features.rumbleOnStart(gamepad1, gamepad2);
-        features.setRainbow(gamepad1, gamepad2);
+        features.setPink(gamepad1, gamepad2, 120);
 
         // this aint working fsr
     //    voltage = new VoltageReader(hardwareMap);
@@ -47,22 +49,33 @@ public abstract class FieldCentricTeleOp extends OpMode {
     @Override
     public void loop()
     {
+        features.setPurple(gamepad1, gamepad2, 100000);
+
         if(gamepad1.left_trigger > 1){
             mult = 1;
-            features.lightRumble(gamepad1, gamepad2, 100);
-        }
+            features.lightRumble(gamepad1, 100);
+            features.lightRumble(gamepad2, 100);
 
-        else if(gamepad1.right_trigger > 1){
+        }
+        else if(gamepad1.right_trigger > 1)
             mult = 0.5;
-        }
 
-        else{
+        else
             mult = 0.70;
+
+
+        if(gamepad1.dpad_up) {
+            wheels.resetIMU();
+            features.lightRumble(gamepad1, 100);
         }
 
-        if(gamepad1.dpad_up){
-            wheels.resetIMU();
-        }
+        if (gamepad2.dpad_right)
+            turret.turnRight();
+
+        if (gamepad2.dpad_left)
+            turret.turnLeft();
+
+
         // multplier for the wheels- currently running @ 70%
         wheels.fieldCentric(mult);
 

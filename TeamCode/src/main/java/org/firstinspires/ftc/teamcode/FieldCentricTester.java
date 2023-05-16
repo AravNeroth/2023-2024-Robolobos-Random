@@ -48,7 +48,7 @@ public class FieldCentricTester extends LinearOpMode{
 
         // rumbles on initialization
         feature.rumbleOnStart(gamepad1, gamepad2);
-        feature.setPink(gamepad1, gamepad2, 10);
+        feature.setPurple(gamepad1, gamepad2, 10);
 
         waitForStart();
 
@@ -92,7 +92,7 @@ public class FieldCentricTester extends LinearOpMode{
 
             if(gamepad1.left_trigger > 0.8){
                 mult = 1;
-                feature.lightRumble(gamepad1, gamepad2, 500);
+                feature.lightRumble(gamepad1, 500);
             }
 
             else if(gamepad1.right_trigger > 0.8){

@@ -90,10 +90,12 @@ public class ControllerFeatures {
 
     }
 
-    public void lightRumble(Gamepad controller1, Gamepad controller2, int ms){
-        controller1.rumble(0.15, 0.15, ms);
-        controller2.rumble(0.15, 0.15, ms);
+    public void lightRumble(Gamepad controller, int ms){
+        controller.rumble(0.15, 0.15, ms);
+    }
 
+    public void midRumble(Gamepad controller, int ms){
+        controller.rumble(0.4, 0.4, ms);
     }
 
     public void rumbleOnStart(Gamepad controller1, Gamepad controller2){
