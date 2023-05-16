@@ -33,17 +33,17 @@ public class Wheels{
 
     //IMU
     // Retrieve the IMU from the hardware map
-    imu = (RevIMU) hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
     // this is making a new object called 'parameters' that we use to hold the angle the imu is at
-    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     // Technically this is the default, however specifying it is clearer
-    parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
     // Without this, data retrieving from the IMU throws an exception
-        imu.init();
+        imu.initialize(parameters);
     }
 
     public void resetIMU(){
-        imu.reset();
+    // FTC LIB implement imu Wrapper to get "recenter" method
     }
 
 

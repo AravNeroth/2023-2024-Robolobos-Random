@@ -49,12 +49,13 @@ public abstract class FieldCentricTeleOp extends OpMode {
     @Override
     public void loop()
     {
+        // color
         features.setPurple(gamepad1, gamepad2, 100000);
 
+        // speed
         if(gamepad1.left_trigger > 1){
             mult = 1;
             features.lightRumble(gamepad1, 100);
-            features.lightRumble(gamepad2, 100);
 
         }
         else if(gamepad1.right_trigger > 1)
@@ -63,12 +64,13 @@ public abstract class FieldCentricTeleOp extends OpMode {
         else
             mult = 0.70;
 
-
+        // IMU reset (to be changed to be recentered)
         if(gamepad1.dpad_up) {
             wheels.resetIMU();
             features.lightRumble(gamepad1, 100);
         }
 
+        // turret controls
         if (gamepad2.dpad_right)
             turret.turnRight();
 
