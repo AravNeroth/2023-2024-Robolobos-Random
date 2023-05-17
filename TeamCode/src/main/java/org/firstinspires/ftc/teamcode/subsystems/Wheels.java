@@ -21,10 +21,12 @@ public class Wheels{
 
     private RevIMU imu;
 
-    DcMotor FL = hardwareMap.dcMotor.get("front left");
-    DcMotor BL = hardwareMap.dcMotor.get("back left");
-    DcMotor FR = hardwareMap.dcMotor.get("front right");
-    DcMotor BR = hardwareMap.dcMotor.get("back right");
+    double mult = 0.7;
+    double flPower, frPower, blPower, brPower;
+    DcMotor FL = hardwareMap.dcMotor.get("leftFront");
+    DcMotor BL = hardwareMap.dcMotor.get("leftRear");
+    DcMotor FR = hardwareMap.dcMotor.get("rightFront");
+    DcMotor BR = hardwareMap.dcMotor.get("rightRear");
 
     public Wheels() {
 
@@ -32,31 +34,39 @@ public class Wheels{
     BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
     //IMU
-    // Retrieve the IMU from the hardware map
-        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
-    // this is making a new object called 'parameters' that we use to hold the angle the imu is at
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-    // Technically this is the default, however specifying it is clearer
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu = new RevIMU(hardwareMap);
+        imu.init();
     // Without this, data retrieving from the IMU throws an exception
-        imu.initialize(parameters);
+
     }
 
     public void resetIMU(){
-    // FTC LIB implement imu Wrapper to get "recenter" method
+        imu.reset();
+    }
+
+    public void setMult(double mult){
+        this.mult = mult;
+    }
+
+    public double getHeading(){
+        return imu.getHeading();
     }
 
 
-    public void fieldCentric(double mult){
+    public void fieldCentric(GamepadEx gamepad){
 
-        double y = gamepad1.left_stick_y;
-        double x = -gamepad1.left_stick_x;
-        double rx = -gamepad1.right_stick_x;
+        double y = Math.pow(gamepad.getLeftY(), 3);
+        double x = Math.pow(gamepad.getLeftX() * 1.1, 3);
+        double rx = Math.pow(gamepad.getRightX(), 3);
 
-        double botHeading = Math.toRadians(imu.getHeading()+180);
+        double heading = Math.toRadians(-imu.getHeading()+180);
+        double rotX = x * Math.cos(heading) - y * Math.sin(heading);
+        double rotY = x * Math.sin(heading) + y * Math.cos(heading);
 
-        double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-        double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
+        flPower = (rotY + rotX + rx);
+        blPower = (rotY - rotX + rx);
+        frPower = (rotY - rotX - rx);
+        brPower = (rotY + rotX - rx);
 
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when
@@ -64,19 +74,26 @@ public class Wheels{
         // the 1 that ks being multiplied can be changed for drift correction
         // mult changes the speed of the motors in terms of %
 
+
+        // * ask john which one of the formulas i use for power cause iont know
+
+        /*
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
-        double frontLeftPower = 1 * (mult * (rotY + rotX + rx)) / denominator;
-        double backLeftPower = 1 * (mult * (rotY - rotX + rx)) / denominator;
-        double frontRightPower = 1 * (mult * (rotY - rotX - rx)) / denominator;
-        double backRightPower = 1 * (mult * (rotY + rotX - rx)) / denominator;
-
-        FL.setPower(frontLeftPower);
-        BL.setPower(backLeftPower);
-        FR.setPower(frontRightPower);
-        BR.setPower(backRightPower);
-
-
+        flPower = 1 * (rotY + rotX + rx) / denominator;
+        blPower = 1 * (rotY - rotX + rx) / denominator;
+        frPower = 1 * (rotY - rotX - rx) / denominator;
+        brPower = 1 * (rotY + rotX - rx) / denominator;
+        */
 
     }
+
+    public void runMotors(){
+        FL.setPower(flPower * mult);
+        FR.setPower(frPower * mult);
+        BL.setPower(blPower * mult);
+        BR.setPower(brPower * mult);
+    }
+
+
 }

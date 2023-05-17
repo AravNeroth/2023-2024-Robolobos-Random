@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 //import org.firstinspires.ftc.teamcode.commands.VoltageReader;
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
@@ -22,64 +25,124 @@ public abstract class FieldCentricTeleOp extends OpMode {
 
     double mult = 0.70;
     // sets controller colors- find in Subsystem ControllerLights
-    Wheels wheels = new Wheels();
-    Arm arm = new Arm();
-    Claw claw = new Claw();
-    Turrent turret = new Turrent();
-    ControllerFeatures features = new ControllerFeatures();
-
-    //private VoltageReader voltage;
+    Wheels wheels;
+    Arm arm;
+    Claw claw;
+    Turrent turret;
+    ControllerFeatures features;
+    
+    GamepadEx pilot, sentry;
     private ElapsedTime runTime;
     @Override
     public void init(){
+
+        pilot = new GamepadEx(gamepad1);
+        sentry = new GamepadEx(gamepad2);
+
+        wheels = new Wheels();
+        arm = new Arm();
+        turret = new Turrent();
+        features = new ControllerFeatures();
         runTime = new ElapsedTime();
 
+        /*
+            when entering in gamepad1 & gamepad 2, it should be used for LED and Rumble only!
+            For getting DATA use the GamepadEx class from FTClib
+            https://docs.ftclib.org/ftclib/features/gamepad-extensions
 
+            for some reason GamepadEx doesn't play nice, even though its a wrapper class(?)
+         */
         features.rumbleOnStart(gamepad1, gamepad2);
         features.setPink(gamepad1, gamepad2, 120);
 
-        // this aint working fsr
-    //    voltage = new VoltageReader(hardwareMap);
-
+        telemetry.addLine("ALl Subsystems & Controllers Actvated");
         telemetry.addLine("Initialization Completed Successfully.");
         telemetry.addLine("Time taken: " + getRuntime()+ " seconds.");
         telemetry.update();
     }
 
     @Override
-    public void loop()
-    {
+    public void loop() {
+        pilot.readButtons();
+        sentry.readButtons();
+
+        // multplier for the wheels- currently running @ 70%
+        wheels.fieldCentric(pilot);
+
         // color
         features.setPurple(gamepad1, gamepad2, 100000);
 
-        // speed
-        if(gamepad1.left_trigger > 1){
-            mult = 1;
+
+        // speeding up controls
+        // if the trigger is pressed halfway, then it'll boost
+        if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.6)) {
+            wheels.setMult(0.75);
             features.lightRumble(gamepad1, 100);
-
+        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.6) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.7)) {
+            wheels.setMult(0.8);
+            features.lightRumble(gamepad1, 100);
+        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.7) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.8)) {
+            wheels.setMult(0.85);
+            features.lightRumble(gamepad1, 100);
+        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.9)) {
+            wheels.setMult(0.9);
+            features.lightRumble(gamepad1, 100);
+        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 1)) {
+            wheels.setMult(1);
+            features.lightRumble(gamepad1, 100);
+        } else {
+            wheels.setMult(0.7);
         }
-        else if(gamepad1.right_trigger > 1)
-            mult = 0.5;
 
+
+        // slowing down controls
+        // depending how far the trigger is held, the speed will decrease
+        if ((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.6)){
+            wheels.setMult(0.65);
+            features.lightRumble(gamepad1, 100);
+        }
+
+        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.6) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.7 )) {
+            wheels.setMult(0.6);
+            features.lightRumble(gamepad1, 100);
+        }
+
+        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.7) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.8 )) {
+            wheels.setMult(0.55);
+            features.lightRumble(gamepad1, 100);
+        }
+
+        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.9 )) {
+            wheels.setMult(0.5);
+            features.lightRumble(gamepad1, 100);
+        }
+
+        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.9) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 1 )) {
+            wheels.setMult(0.45);
+            features.lightRumble(gamepad1, 100);
+        }
+
+            // remember that the else statement is the default if the first if statement is false
         else
-            mult = 0.70;
+            wheels.setMult(0.7);
 
-        // IMU reset (to be changed to be recentered)
-        if(gamepad1.dpad_up) {
+
+
+            // IMU reset
+        if(pilot.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
             wheels.resetIMU();
             features.lightRumble(gamepad1, 100);
         }
 
         // turret controls
-        if (gamepad2.dpad_right)
+        if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
             turret.turnRight();
 
-        if (gamepad2.dpad_left)
+        if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
             turret.turnLeft();
 
 
-        // multplier for the wheels- currently running @ 70%
-        wheels.fieldCentric(mult);
+        
 
     }
 
@@ -87,7 +150,7 @@ public abstract class FieldCentricTeleOp extends OpMode {
     public void stop()
     {
         telemetry.addLine("Robot Stopped.");
-        telemetry.addLine("Total Runtime: " + getRuntime() + " seconds.");
+        telemetry.addLine("Total Runtime: " + runTime + " seconds.");
         telemetry.update();
     }
 
