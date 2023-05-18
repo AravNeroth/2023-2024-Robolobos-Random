@@ -50,8 +50,9 @@ public abstract class FieldCentricTeleOp extends OpMode {
             For getting DATA use the GamepadEx class from FTClib
             https://docs.ftclib.org/ftclib/features/gamepad-extensions
 
-            for some reason GamepadEx doesn't play nice, even though its a wrapper class(?)
+            for some reason GamepadEx doesn't play nice with Gamepad, even though its a wrapper class
          */
+
         features.rumbleOnStart(gamepad1, gamepad2);
         features.setPink(gamepad1, gamepad2, 120);
 
