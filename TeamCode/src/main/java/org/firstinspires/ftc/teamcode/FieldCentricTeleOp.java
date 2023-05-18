@@ -139,11 +139,9 @@ public abstract class FieldCentricTeleOp extends OpMode {
         if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
             turret.turnRight();
 
+
         if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
             turret.turnLeft();
-
-
-        
 
     }
 
