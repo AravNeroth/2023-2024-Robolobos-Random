@@ -20,18 +20,18 @@ import org.firstinspires.ftc.teamcode.subsystems.Wheels;
     to constantly update the IMU inside the subsystem. In LinearOpMode, the
     equivalent would be to update the IMU in the "opModeIsActive" method
  */
-@TeleOp(name="FieldCentricDrive", group="DriveModes")
+@TeleOp(name="FieldCentricTeleOp", group="DriveModes")
 public abstract class FieldCentricTeleOp extends OpMode {
 
     double mult = 0.70;
     // sets controller colors- find in Subsystem ControllerLights
-    Wheels wheels;
-    Arm arm;
-    Claw claw;
-    Turrent turret;
-    ControllerFeatures features;
+    private Wheels wheels;
+    private Arm arm;
+    private Claw claw;
+    private Turrent turret;
+    private ControllerFeatures features;
     
-    GamepadEx pilot, sentry;
+    private GamepadEx pilot, sentry;
     private ElapsedTime runTime;
     @Override
     public void init(){
@@ -74,59 +74,14 @@ public abstract class FieldCentricTeleOp extends OpMode {
         features.setPurple(gamepad1, gamepad2, 100000);
 
 
-        // speeding up controls
+        // speeding controls
         // if the trigger is pressed halfway, then it'll boost
-        if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.6)) {
-            wheels.setMult(0.75);
-            features.lightRumble(gamepad1, 100);
-        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.6) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.7)) {
-            wheels.setMult(0.8);
-            features.lightRumble(gamepad1, 100);
-        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.7) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.8)) {
-            wheels.setMult(0.85);
-            features.lightRumble(gamepad1, 100);
-        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.9)) {
-            wheels.setMult(0.9);
-            features.lightRumble(gamepad1, 100);
-        } else if ((pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) && (pilot.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 1)) {
-            wheels.setMult(1);
-            features.lightRumble(gamepad1, 100);
-        } else {
-            wheels.setMult(0.7);
-        }
 
+            wheels.setMult(features.leftTriggerBoost(pilot));
 
-        // slowing down controls
-        // depending how far the trigger is held, the speed will decrease
-        if ((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.6)){
-            wheels.setMult(0.65);
-            features.lightRumble(gamepad1, 100);
-        }
+        // if the trigger is pressed halfway, then it'll slow
 
-        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.6) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.7 )) {
-            wheels.setMult(0.6);
-            features.lightRumble(gamepad1, 100);
-        }
-
-        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.7) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.8 )) {
-            wheels.setMult(0.55);
-            features.lightRumble(gamepad1, 100);
-        }
-
-        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.9 )) {
-            wheels.setMult(0.5);
-            features.lightRumble(gamepad1, 100);
-        }
-
-        else if((pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.9) && (pilot.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 1 )) {
-            wheels.setMult(0.45);
-            features.lightRumble(gamepad1, 100);
-        }
-
-            // remember that the else statement is the default if the first if statement is false
-        else
-            wheels.setMult(0.7);
-
+            wheels.setMult(features.rightTriggerSlow(pilot));
 
 
             // IMU reset

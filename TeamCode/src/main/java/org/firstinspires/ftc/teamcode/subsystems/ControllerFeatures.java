@@ -3,6 +3,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 /*
@@ -102,5 +103,65 @@ public class ControllerFeatures {
 
         controller1.runRumbleEffect(startUp);
         controller2.runRumbleEffect(startUp);
+    }
+
+    // following two methods speed or slow down the bot depending on how far the trigger is pressed
+    public double rightTriggerSlow(GamepadEx gamepad){
+        double tempMult = 0.7;
+        if ((gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5) && (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.6)) {
+            tempMult = 0.75;
+            lightRumble(gamepad1, 100);
+        } else if ((gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.6) && (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.7)) {
+            tempMult = 0.8;
+            lightRumble(gamepad1, 100);
+        } else if ((gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.7) && (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.8)) {
+            tempMult = 0.85;
+            lightRumble(gamepad1, 100);
+        } else if ((gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.8) && (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 0.9)) {
+            tempMult = 0.9;
+            lightRumble(gamepad1, 100);
+        } else if ((gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) && (gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) <= 1)) {
+            tempMult = 1;
+            lightRumble(gamepad1, 100);
+        } else {
+            return tempMult;
+        }
+        return tempMult;
+    }
+
+
+    public double leftTriggerBoost(GamepadEx gamepad){
+        double tempMult = 0.7;
+
+        if ((gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5) && (gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.6)){
+            tempMult = 0.65;
+            lightRumble(gamepad1, 100);
+        }
+
+        else if((gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.6) && (gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.7 )) {
+            tempMult = 0.6;
+            lightRumble(gamepad1, 100);
+        }
+
+        else if((gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.7) && (gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.8 )) {
+            tempMult = 0.55;
+            lightRumble(gamepad1, 100);
+        }
+
+        else if((gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.8) && (gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 0.9 )) {
+            tempMult = 0.5;
+            lightRumble(gamepad1, 100);
+        }
+
+        else if((gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.9) && (gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) <= 1 )) {
+            tempMult = 0.45;
+            lightRumble(gamepad1, 100);
+        }
+
+        // remember that the else statement is the default if the first if statement is false
+        else
+            return tempMult;
+
+        return tempMult;
     }
 }
