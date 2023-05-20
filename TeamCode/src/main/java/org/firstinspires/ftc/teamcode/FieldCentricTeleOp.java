@@ -66,6 +66,9 @@ public abstract class FieldCentricTeleOp extends OpMode {
         telemetry.update();
     }
 
+    public void start(){
+        runTime.reset();
+    }
     @Override
     public void loop() {
         pilot.readButtons();
