@@ -36,6 +36,10 @@ public abstract class FieldCentricTeleOp extends OpMode {
     @Override
     public void init(){
 
+        telemetry.addLine("Initializatizing Robot");
+        telemetry.update();
+
+
         pilot = new GamepadEx(gamepad1);
         sentry = new GamepadEx(gamepad2);
 
@@ -103,7 +107,7 @@ public abstract class FieldCentricTeleOp extends OpMode {
     @Override
     public void stop()
     {
-        telemetry.addLine("Robot Stopped.");
+        telemetry.addLine("Robot Shut Down.");
         telemetry.addLine("Total Runtime: " + runTime + " seconds.");
         telemetry.update();
     }
