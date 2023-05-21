@@ -52,6 +52,30 @@ public class Wheels{
         return imu.getHeading();
     }
 
+    public void passiveBrake(){
+        /*
+        checking if every single motor is 0 is the surest way to make
+        sure the brake happens at the correct time.
+
+        Since this method is being looped while the robot is on, it will
+        always be checking if the power on every single wheel is 0
+
+        (still theoretically, its untested)
+        */
+        if(frPower == 0 && flPower == 0 && brPower ==0 && blPower == 0) {
+            FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+    }
+
+    public void manualBrake(){
+        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
     public void fieldCentric(GamepadEx gamepad){
 

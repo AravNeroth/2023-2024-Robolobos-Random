@@ -71,31 +71,47 @@ public abstract class FieldCentricTeleOp extends OpMode {
     }
     @Override
     public void loop() {
-        pilot.readButtons();
-        sentry.readButtons();
-
-        // multplier for the wheels- currently running @ 70%
-        wheels.fieldCentric(pilot);
 
         // color
         features.setPurple(gamepad1, gamepad2, 100000);
 
+        // this makes GamepadEx work
+        pilot.readButtons();
+        sentry.readButtons();
+
+
+        // robot controls
+        // multplier for the wheels- currently running @ 70%
+        wheels.fieldCentric(pilot);
+
+        // powering the motors
+        wheels.runMotors();
 
         // speeding controls
         // if the trigger is pressed halfway, then it'll boost
-
-            wheels.setMult(features.leftTriggerBoost(pilot));
+        wheels.setMult(features.leftTriggerBoost(pilot));
 
         // if the trigger is pressed halfway, then it'll slow
+        wheels.setMult(features.rightTriggerSlow(pilot));
 
-            wheels.setMult(features.rightTriggerSlow(pilot));
+        // UNTESTED! Theoretically brakes when the robot motors have no power
+        wheels.passiveBrake();
 
+
+        // Pilot Button Controls
+
+            // manual braking
+        if (pilot.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
+            wheels.manualBrake();
 
             // IMU reset
         if(pilot.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
             wheels.resetIMU();
             features.lightRumble(gamepad1, 100);
         }
+
+
+        // Sentry Button Controls
 
         // turret controls
         if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
