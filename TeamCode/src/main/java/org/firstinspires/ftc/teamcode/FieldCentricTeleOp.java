@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Wheels;
 public abstract class FieldCentricTeleOp extends OpMode {
 
     double mult = 0.70;
-    // sets controller colors- find in Subsystem ControllerLights
+    double maxRecVel = 0;
     private Wheels wheels;
     private Arm arm;
     private Claw claw;
@@ -67,8 +67,17 @@ public abstract class FieldCentricTeleOp extends OpMode {
         telemetry.update();
     }
 
+    // technically the init loop isnt needed but let's see if it fixes the runtime error
+    public void init_loop() {
+        // this is a test, it'll keep looping this until you fully start the Robot
+        // controllers will turn red and will rumble if this method is reached
+        features.setRed(gamepad1, gamepad2, 5);
+        features.lightRumble(gamepad1, 5);
+        features.lightRumble(gamepad2, 5);
+    }
+
     public void start(){
-        runTime.reset();
+        resetRuntime();
     }
     @Override
     public void loop() {
@@ -121,9 +130,17 @@ public abstract class FieldCentricTeleOp extends OpMode {
         if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
             turret.turnLeft();
 
+
+        // most of this telementry was made on a plane without wifi btw
+        // im not prioritizing outputing our max velocity over PID
+        if (maxRecVel < wheels.getAvgVelocity())
+            maxRecVel = wheels.getAvgVelocity();
+
         // looped telementry
-        telemetry.addLine("Heading: " + wheels.getHeading());
+        telemetry.addLine("Runtime From Start: " + getRuntime() + "Seconds");
+        telemetry.addLine("Heading: " + wheels.getHeading() + "Degrees");
         telemetry.addLine("Current Velocity: " + wheels.getAvgVelocity());
+        telemetry.addLine("Maximum Recorded Velocity: " + maxRecVel);
         telemetry.update();
     }
 
@@ -132,6 +149,7 @@ public abstract class FieldCentricTeleOp extends OpMode {
     {
         telemetry.addLine("Robot Shut Down.");
         telemetry.addLine("Total Runtime: " + runTime + " seconds.");
+        telemetry.addLine("Highest Recorded Velocity: " + maxRecVel);
         telemetry.update();
     }
 

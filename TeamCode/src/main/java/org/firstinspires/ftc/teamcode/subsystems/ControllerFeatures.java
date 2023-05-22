@@ -88,7 +88,12 @@ public class ControllerFeatures {
         ms = (seconds * 1000);
         controller1.setLedColor(255, 51, 255, ms);
         controller2.setLedColor(255, 51, 255, ms);
+    }
 
+    public void setRed(Gamepad controller1, Gamepad controller2, int seconds){
+        ms = (seconds * 1000);
+        controller1.setLedColor(255, 0, 0, ms);
+        controller2.setLedColor(255, 0, 0, ms);
     }
 
     public void lightRumble(Gamepad controller, int ms){

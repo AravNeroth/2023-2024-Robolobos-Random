@@ -95,6 +95,8 @@ public class Wheels{
 
     public void fieldCentric(GamepadEx gamepad){
 
+        // i stole this what are these numbers at the end
+
         double y = Math.pow(gamepad.getLeftY(), 3);
         double x = Math.pow(gamepad.getLeftX() * 1.1, 3);
         double rx = Math.pow(gamepad.getRightX(), 3);
@@ -108,7 +110,7 @@ public class Wheels{
         frPower = (rotY - rotX - rx);
         brPower = (rotY + rotX - rx);
 
-        
+
         // * ask john which one of the formulas i use for power cause iont know
 
         /*
