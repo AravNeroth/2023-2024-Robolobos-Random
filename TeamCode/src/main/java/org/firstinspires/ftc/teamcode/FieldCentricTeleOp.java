@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 //import org.firstinspires.ftc.teamcode.commands.VoltageReader;
 import org.checkerframework.checker.units.qual.C;
@@ -100,7 +101,7 @@ public abstract class FieldCentricTeleOp extends OpMode {
 
         // Pilot Button Controls
 
-            // manual braking
+            // manual braking [mainly for auto]
         if (pilot.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
             wheels.manualBrake();
 
@@ -117,10 +118,13 @@ public abstract class FieldCentricTeleOp extends OpMode {
         if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
             turret.turnRight();
 
-
         if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
             turret.turnLeft();
 
+        // looped telementry
+        telemetry.addLine("Heading: " + wheels.getHeading());
+        telemetry.addLine("Current Velocity: " + wheels.getAvgVelocity());
+        telemetry.update();
     }
 
     @Override

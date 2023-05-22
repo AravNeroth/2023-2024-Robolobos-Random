@@ -7,31 +7,41 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opM
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys.*;
 import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+
+import java.util.List;
 
 /*
 DISCLAIMER- I HAVE NO IDEA WHAT IM DOING
  */
 public class Wheels{
 
-    private RevIMU imu;
+    public RevIMU imu;
 
     double mult = 0.7;
+    double avgVel;
     double flPower, frPower, blPower, brPower;
-    DcMotor FL = hardwareMap.dcMotor.get("leftFront");
-    DcMotor BL = hardwareMap.dcMotor.get("leftRear");
-    DcMotor FR = hardwareMap.dcMotor.get("rightFront");
-    DcMotor BR = hardwareMap.dcMotor.get("rightRear");
+
+    List<LynxModule> hubs = hardwareMap.getAll(LynxModule.class);
+
+    MotorEx FL = new MotorEx(hardwareMap, "leftFront");
+    MotorEx BL = new MotorEx(hardwareMap,"leftRear");
+    MotorEx FR = new MotorEx(hardwareMap,"rightFront");
+    MotorEx BR = new MotorEx(hardwareMap,"rightRear");
 
     public Wheels() {
 
-    FR.setDirection(DcMotorSimple.Direction.REVERSE);
-    BR.setDirection(DcMotorSimple.Direction.REVERSE);
+    FR.setInverted(true);
+    BR.setInverted(true);
 
     //IMU
         imu = new RevIMU(hardwareMap);
@@ -62,19 +72,25 @@ public class Wheels{
 
         (still theoretically, its untested)
         */
-        if(frPower == 0 && flPower == 0 && brPower ==0 && blPower == 0) {
-            FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if(frPower == 0 && flPower == 0 && brPower == 0 && blPower == 0) {
+            FR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            FL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            BR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            BL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         }
     }
 
     public void manualBrake(){
-        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        FL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        BL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+    }
+
+    // Dealing in hopes and prayers because yet again idk if this works
+    public double getAvgVelocity(){
+        avgVel = getAvgVelocity();
+        return avgVel;
     }
 
     public void fieldCentric(GamepadEx gamepad){
@@ -92,13 +108,7 @@ public class Wheels{
         frPower = (rotY - rotX - rx);
         brPower = (rotY + rotX - rx);
 
-        // Denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio, but only when
-        // at least one is out of the range [-1, 1]
-        // the 1 that ks being multiplied can be changed for drift correction
-        // mult changes the speed of the motors in terms of %
-
-
+        
         // * ask john which one of the formulas i use for power cause iont know
 
         /*
@@ -113,10 +123,10 @@ public class Wheels{
     }
 
     public void runMotors(){
-        FL.setPower(flPower * mult);
-        FR.setPower(frPower * mult);
-        BL.setPower(blPower * mult);
-        BR.setPower(brPower * mult);
+        FL.setVelocity(flPower * mult);
+        FR.setVelocity(frPower * mult);
+        BL.setVelocity(blPower * mult);
+        BR.setVelocity(brPower * mult);
     }
 
 
