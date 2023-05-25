@@ -13,31 +13,32 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /*
 DISCLAIMER- I HAVE NO IDEA WHAT IM DOING
  */
-public class Wheels{
+public class Wheels {
 
     private RevIMU imu;
 
     double mult = 0.7;
-    double flPower, frPower, blPower, brPower;
-    DcMotor FL = hardwareMap.dcMotor.get("leftFront");
-    DcMotor BL = hardwareMap.dcMotor.get("leftRear");
-    DcMotor FR = hardwareMap.dcMotor.get("rightFront");
-    DcMotor BR = hardwareMap.dcMotor.get("rightRear");
+    double flPower, frPower, blPower, brPower = 0;
 
-    public Wheels() {
+    private DcMotor FL, BL, FR, BR;
+    public Wheels(HardwareMap hardwareMap) {
+        FL = hardwareMap.get(DcMotor.class, "leftFront");
+        BL = hardwareMap.get(DcMotor.class,"leftRear");
+        FR = hardwareMap.get(DcMotor.class,"rightFront");
+        BR = hardwareMap.get(DcMotor.class, "rightRear");
 
-    FR.setDirection(DcMotorSimple.Direction.REVERSE);
-    BR.setDirection(DcMotorSimple.Direction.REVERSE);
+        FR.setDirection(DcMotorSimple.Direction.REVERSE);
+        BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
-    //IMU
+        //IMU
         imu = new RevIMU(hardwareMap);
         imu.init();
-    // Without this, data retrieving from the IMU throws an exception
-
+        // Without this, data retrieving from the IMU throws an exception
     }
 
     public void resetIMU(){
