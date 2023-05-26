@@ -48,6 +48,19 @@ public class Wheels{
         imu.init();
     // Without this, data retrieving from the IMU throws an exception
 
+        /*
+        this should work (?) it's setting how the motors work when there's no
+        power being delivered, just like how if you set power.
+        So the moment the robot is turned on, the wheels should actively resist
+
+        if this dont work well, then we'll have to look into PID and general momentum correction
+        or maybe something that reverses the motors physically for a second after it stops
+         */
+        FR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        FL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        BL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
     }
 
     public void resetIMU(){
@@ -60,31 +73,6 @@ public class Wheels{
 
     public double getHeading(){
         return imu.getHeading();
-    }
-
-    public void passiveBrake(){
-        /*
-        checking if every single motor is 0 is the surest way to make
-        sure the brake happens at the correct time.
-
-        Since this method is being looped while the robot is on, it will
-        always be checking if the power on every single wheel is 0
-
-        (still theoretically, its untested)
-        */
-        if(frPower == 0 && flPower == 0 && brPower == 0 && blPower == 0) {
-            FR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-            FL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-            BR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-            BL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        }
-    }
-
-    public void manualBrake(){
-        FR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        FL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        BR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        BL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
 
     // Dealing in hopes and prayers because yet again idk if this works
