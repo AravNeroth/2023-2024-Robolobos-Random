@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 //import org.firstinspires.ftc.teamcode.commands.VoltageReader;
 import org.checkerframework.checker.units.qual.C;
@@ -16,8 +12,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 import org.firstinspires.ftc.teamcode.subsystems.Turrent;
 import org.firstinspires.ftc.teamcode.subsystems.Wheels;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 
 /*
     The reason why this class has OpMode instead of LinearOpMode is because
@@ -27,36 +21,31 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
     equivalent would be to update the IMU in the "opModeIsActive" method
  */
 @TeleOp(name="FieldCentricTeleOp", group="DriveModes")
-public class FieldCentricTeleOp extends OpMode {
+public abstract class FieldCentricTeleOp extends OpMode {
+
     double mult = 0.70;
     // sets controller colors- find in Subsystem ControllerLights
-
-    //DcMotor FL = hardwareMap.get(DcMotor.class, "leftFront");
-    /*DcMotor BL = hardwareMap.get(DcMotor.class,"leftRear");
-    DcMotor FR = hardwareMap.get(DcMotor.class,"rightFront");
-    DcMotor BR = hardwareMap.get(DcMotor.class, "rightRear");
-    */
     private Wheels wheels;
-    //private Arm arm = new Arm();
+    private Arm arm;
     private Claw claw;
     private Turrent turret;
     private ControllerFeatures features;
     
     private GamepadEx pilot, sentry;
     private ElapsedTime runTime;
-
     @Override
     public void init(){
 
         telemetry.addLine("Initializatizing Robot");
         telemetry.update();
 
+
         pilot = new GamepadEx(gamepad1);
         sentry = new GamepadEx(gamepad2);
 
-        wheels = new Wheels(hardwareMap);
-        //arm = new Arm();
-        //turret = new Turrent();
+        wheels = new Wheels();
+        arm = new Arm();
+        turret = new Turrent();
         features = new ControllerFeatures();
         runTime = new ElapsedTime();
 
@@ -68,29 +57,29 @@ public class FieldCentricTeleOp extends OpMode {
             for some reason GamepadEx doesn't play nice with Gamepad, even though its a wrapper class
          */
 
-        //features.rumbleOnStart(gamepad1, gamepad2);
-        //features.setPink(gamepad1, gamepad2, 120);
+        features.rumbleOnStart(gamepad1, gamepad2);
+        features.setPink(gamepad1, gamepad2, 120);
 
         telemetry.addLine("ALl Subsystems & Controllers Actvated");
         telemetry.addLine("Initialization Completed Successfully.");
-        //telemetry.addLine("Time taken: " + getRuntime()+ " seconds.");
+        telemetry.addLine("Time taken: " + getRuntime()+ " seconds.");
         telemetry.update();
     }
 
     public void start(){
-        //runTime.reset();
+        runTime.reset();
     }
     @Override
     public void loop() {
 
         // color
-        //features.setPurple(gamepad1, gamepad2, 100000);
+        features.setPurple(gamepad1, gamepad2, 100000);
 
         // this makes GamepadEx work
-        //pilot.readButtons();
-        //sentry.readButtons();
+        pilot.readButtons();
+        sentry.readButtons();
 
-/*
+
         // robot controls
         // multplier for the wheels- currently running @ 70%
         wheels.fieldCentric(pilot);
@@ -131,14 +120,14 @@ public class FieldCentricTeleOp extends OpMode {
 
         if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
             turret.turnLeft();
-*/
+
     }
 
     @Override
     public void stop()
     {
         telemetry.addLine("Robot Shut Down.");
-        //telemetry.addLine("Total Runtime: " + runTime + " seconds.");
+        telemetry.addLine("Total Runtime: " + runTime + " seconds.");
         telemetry.update();
     }
 
