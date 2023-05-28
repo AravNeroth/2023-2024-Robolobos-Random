@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
@@ -29,7 +30,9 @@ public abstract class FieldCentricTeleOp extends OpMode {
     private Claw claw;
     private Turrent turret;
     private ControllerFeatures features;
-    
+
+    HardwareMap teleOpMap;
+
     private GamepadEx pilot, sentry;
     private ElapsedTime runTime;
     @Override
@@ -42,7 +45,8 @@ public abstract class FieldCentricTeleOp extends OpMode {
         pilot = new GamepadEx(gamepad1);
         sentry = new GamepadEx(gamepad2);
 
-        wheels = new Wheels();
+        wheels = new Wheels(teleOpMap);
+
         arm = new Arm();
         turret = new Turrent();
         features = new ControllerFeatures();
@@ -93,15 +97,9 @@ public abstract class FieldCentricTeleOp extends OpMode {
         // if the trigger is pressed halfway, then it'll slow
         wheels.setMult(features.rightTriggerSlow(pilot));
 
-        // UNTESTED! Theoretically brakes when the robot motors have no power
-        wheels.passiveBrake();
 
 
         // Pilot Button Controls
-
-            // manual braking
-        if (pilot.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
-            wheels.manualBrake();
 
             // IMU reset
         if(pilot.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {

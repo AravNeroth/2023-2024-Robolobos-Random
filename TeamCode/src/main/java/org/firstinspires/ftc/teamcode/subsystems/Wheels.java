@@ -11,8 +11,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /*
 DISCLAIMER- I HAVE NO IDEA WHAT IM DOING
@@ -23,12 +25,14 @@ public class Wheels{
 
     double mult = 0.7;
     double flPower, frPower, blPower, brPower;
-    DcMotor FL = hardwareMap.dcMotor.get("leftFront");
-    DcMotor BL = hardwareMap.dcMotor.get("leftRear");
-    DcMotor FR = hardwareMap.dcMotor.get("rightFront");
-    DcMotor BR = hardwareMap.dcMotor.get("rightRear");
+    DcMotorEx FL, BL, FR, BR;
 
-    public Wheels() {
+    public Wheels(HardwareMap teleOpMap) {
+
+        FL = teleOpMap.get(DcMotorEx.class, "leftFront");
+        BL = teleOpMap.get(DcMotorEx.class, "leftRear");
+        BR = teleOpMap.get(DcMotorEx.class, "rightRear");
+        FR = teleOpMap.get(DcMotorEx.class, "rightFront");
 
     FR.setDirection(DcMotorSimple.Direction.REVERSE);
     BR.setDirection(DcMotorSimple.Direction.REVERSE);
