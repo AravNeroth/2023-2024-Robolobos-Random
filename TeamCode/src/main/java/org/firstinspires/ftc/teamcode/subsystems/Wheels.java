@@ -24,10 +24,10 @@ public class Wheels{
 
 
     public Wheels(HardwareMap hardwareMap) {
-        DcMotor FL = hardwareMap.dcMotor.get("leftFront");
-        DcMotor BL = hardwareMap.dcMotor.get("leftRear");
-        DcMotor FR = hardwareMap.dcMotor.get("rightFront");
-        DcMotor BR = hardwareMap.dcMotor.get("rightRear");
+        FL = hardwareMap.dcMotor.get("leftFront");
+        BL = hardwareMap.dcMotor.get("leftRear");
+        FR = hardwareMap.dcMotor.get("rightFront");
+        BR = hardwareMap.dcMotor.get("rightRear");
 
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
