@@ -1,27 +1,18 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys.*;
 import com.arcrobotics.ftclib.hardware.RevIMU;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.subsystems.IMUjeff;
 
 public class Wheels{
-    private RevIMU imu;
-
-    double mult = 0.7;
+    double multi = 0.7;
     double flPower, frPower, blPower, brPower;
     DcMotor FL, BL, FR, BR;
 
+    IMUjeff chassisIMU;
 
     public Wheels(HardwareMap hardwareMap) {
         FL = hardwareMap.dcMotor.get("leftFront");
@@ -33,22 +24,21 @@ public class Wheels{
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //IMU
-        imu = new RevIMU(hardwareMap);
-        imu.init();
+        //imu = new RevIMU(hardwareMap);
+        //imu.init();
+        chassisIMU = new IMUjeff(hardwareMap, "cIMU");
         // Without this, data retrieving from the IMU throws an exception
     }
 
     public void resetIMU(){
-        imu.reset();
+        //imu.reset();
     }
 
-    public void setMult(double mult){
-        this.mult = mult;
+    public void setMulti(double multi){
+        this.multi = multi;
     }
 
-    public double getHeading(){
-        return imu.getHeading();
-    }
+
 
     public void passiveBrake(){
         /*
@@ -75,13 +65,13 @@ public class Wheels{
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void fieldCentric(GamepadEx gamepad){
+    public void fieldCentric(GamepadEx gamePad){
 
-        double y = Math.pow(gamepad.getLeftY(), 3);
-        double x = Math.pow(gamepad.getLeftX() * 1.1, 3);
-        double rx = Math.pow(gamepad.getRightX(), 3);
+        double y = -gamePad.getLeftY();
+        double x = -gamePad.getLeftX();
+        double rx = -gamePad.getRightX();
 
-        double heading = Math.toRadians(-imu.getHeading()+180);
+        double heading = Math.toRadians(-chassisIMU.getYaw());
         double rotX = x * Math.cos(heading) - y * Math.sin(heading);
         double rotY = x * Math.sin(heading) + y * Math.cos(heading);
 
@@ -94,10 +84,10 @@ public class Wheels{
         // This ensures all the powers maintain the same ratio, but only when
         // at least one is out of the range [-1, 1]
         // the 1 that ks being multiplied can be changed for drift correction
-        // mult changes the speed of the motors in terms of %
+        // multi changes the speed of the motors in terms of %
 
 
-        // * ask john which one of the formulas i use for power cause iont know
+        // * ask john which one of the formulas i use for power cause i don't know
 
         /*
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -111,9 +101,9 @@ public class Wheels{
     }
 
     public void runMotors(){
-        FL.setPower(flPower * mult);
-        FR.setPower(frPower * mult);
-        BL.setPower(blPower * mult);
-        BR.setPower(brPower * mult);
+        FL.setPower(flPower * multi);
+        FR.setPower(frPower * multi);
+        BL.setPower(blPower * multi);
+        BR.setPower(brPower * multi);
     }
 }
