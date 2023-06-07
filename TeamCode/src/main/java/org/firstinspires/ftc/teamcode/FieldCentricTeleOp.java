@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.telecom.TelecomManager;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Wheels;
+import org.firstinspires.ftc.teamcode.subsystems.Slides;
 
 /*
     The reason why this class has OpMode instead of LinearOpMode is because
@@ -28,6 +30,8 @@ public class FieldCentricTeleOp extends OpMode {
     private Arm arm;
     private GamepadEx pilot, sentry;
     private ElapsedTime runTime;
+    private Slides slides;
+    private double turnPower;
 
     @Override
     public void init() {
@@ -38,6 +42,7 @@ public class FieldCentricTeleOp extends OpMode {
         wheels = new Wheels(hardwareMap);
         turret = new Turret(hardwareMap);
         arm = new Arm(hardwareMap);
+        slides = new Slides(hardwareMap);
 
         telemetry.addLine("Initializing Robot");
         telemetry.update();
@@ -51,41 +56,49 @@ public class FieldCentricTeleOp extends OpMode {
     }
 
     @Override
-    public void loop() {
-        telemetry.addLine("Running loop");
-        telemetry.addData("Arm Motor Target Position: ", arm.getArmMotorTargetPosition());
-        telemetry.addData("Arm Motor Power", arm.getArmMotorPower());
-        telemetry.update();
+        public void loop() {
+            telemetry.addLine("Running loop");
+            telemetry.addData("Arm Motor Target Position: ", arm.getArmMotorTargetPosition());
+            telemetry.addData("Arm Motor Power", arm.getArmMotorPower());
+            telemetry.addData("Turret Motor Rotation", turnPower);
+            telemetry.update();
 
-        // this makes GamePadEx work
-        pilot.readButtons();
-        sentry.readButtons();
+            // this makes GamePadEx work
+            pilot.readButtons();
+            sentry.readButtons();
 
-        wheels.fieldCentric(pilot);
-        wheels.runMotors();
+            wheels.fieldCentric(pilot);
+            wheels.runMotors();
 
 
-        if (sentry.gamepad.x) {
-            turret.turnLeft();
+            if((sentry.gamepad.right_stick_x > 0 || sentry.gamepad.right_stick_x < 0) && (turnPower <= 100 && turnPower >= -100)){
+                turret.turnWithTrigger(sentry.gamepad.right_stick_x);
+                turnPower +=sentry.gamepad.right_stick_x;
+            }
+            //else if(sentry.gamepad.right_stick_x < 0){
+               // turret.turnWithTrigger(sentry.gamepad.right_stick_x);
+                //turnPower += sentry.gamepad.right_stick_x;
+           // }
+            else{
+                turret.stopTurret();
+            }
+
+            if(sentry.gamepad.dpad_right){
+                arm.armUp();
+
+            }
+            else if(sentry.gamepad.dpad_left){
+                arm.armDown();
+            }
+            else if(sentry.gamepad.dpad_up){
+                arm.armMid();
+            }
+            if(sentry.gamepad.right_bumper){
+                slides.slidesForward();
+            }
+
+
         }
-
-        else if (sentry.gamepad.b) {
-            turret.turnRight();
-        }
-        else{
-            turret.stopTurret();
-        }
-
-        if(sentry.gamepad.dpad_right){
-            arm.armUp();
-
-        }
-        else if(sentry.gamepad.dpad_left){
-            arm.armDown();
-        }
-
-
-    }
 
     @Override
     public void stop() {

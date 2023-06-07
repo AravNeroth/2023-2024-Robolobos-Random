@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.subsystems.IMUjeff;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 
 public class Wheels{
     double multi = 0.7;
     double flPower, frPower, blPower, brPower;
     DcMotor FL, BL, FR, BR;
 
-    IMUjeff chassisIMU;
+    BNO055IMU imu;
+    BNO055IMU.Parameters parameters;
 
     public Wheels(HardwareMap hardwareMap) {
         FL = hardwareMap.dcMotor.get("leftFront");
@@ -26,12 +26,15 @@ public class Wheels{
         //IMU
         //imu = new RevIMU(hardwareMap);
         //imu.init();
-        chassisIMU = new IMUjeff(hardwareMap, "cIMU");
+        imu = hardwareMap.get(BNO055IMU.class, "cIMU");
+        parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
         // Without this, data retrieving from the IMU throws an exception
     }
 
     public void resetIMU(){
-        //imu.reset();
+        imu.initialize(parameters);
     }
 
     public void setMulti(double multi){
@@ -71,14 +74,14 @@ public class Wheels{
         double x = -gamePad.getLeftX();
         double rx = -gamePad.getRightX();
 
-        double heading = Math.toRadians(-chassisIMU.getYaw());
+        double heading = -imu.getAngularOrientation().firstAngle;
         double rotX = x * Math.cos(heading) - y * Math.sin(heading);
         double rotY = x * Math.sin(heading) + y * Math.cos(heading);
 
-        flPower = (rotY + rotX + rx);
-        blPower = (rotY - rotX + rx);
-        frPower = (rotY - rotX - rx);
-        brPower = (rotY + rotX - rx);
+        //flPower = (rotY + rotX + rx);
+        //blPower = (rotY - rotX + rx);
+        //frPower = (rotY - rotX - rx);
+        //brPower = (rotY + rotX - rx);
 
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when
@@ -89,14 +92,14 @@ public class Wheels{
 
         // * ask john which one of the formulas i use for power cause i don't know
 
-        /*
+
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
         flPower = 1 * (rotY + rotX + rx) / denominator;
         blPower = 1 * (rotY - rotX + rx) / denominator;
         frPower = 1 * (rotY - rotX - rx) / denominator;
         brPower = 1 * (rotY + rotX - rx) / denominator;
-        */
+
 
     }
 
