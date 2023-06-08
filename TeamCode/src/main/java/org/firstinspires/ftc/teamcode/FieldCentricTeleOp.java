@@ -70,16 +70,13 @@ public class FieldCentricTeleOp extends OpMode {
             wheels.fieldCentric(pilot);
             wheels.runMotors();
 
-
-            if((sentry.gamepad.right_stick_x > 0 || sentry.gamepad.right_stick_x < 0) && (turnPower <= 100 && turnPower >= -100)){
+            if (sentry.gamepad.right_stick_x > 0 && turnPower <= 10) {
                 turret.turnWithTrigger(sentry.gamepad.right_stick_x);
                 turnPower +=sentry.gamepad.right_stick_x;
-            }
-            //else if(sentry.gamepad.right_stick_x < 0){
-               // turret.turnWithTrigger(sentry.gamepad.right_stick_x);
-                //turnPower += sentry.gamepad.right_stick_x;
-           // }
-            else{
+            } else if (sentry.gamepad.right_stick_x < 0 && turnPower >= -10) {
+                turret.turnWithTrigger(sentry.gamepad.right_stick_x);
+                turnPower += sentry.gamepad.right_stick_x;
+            } else {
                 turret.stopTurret();
             }
 
