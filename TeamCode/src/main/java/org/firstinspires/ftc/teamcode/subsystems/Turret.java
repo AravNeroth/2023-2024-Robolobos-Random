@@ -11,7 +11,8 @@ public class Turret {
     public Turret(HardwareMap hardwareMap) {
 
         turret = hardwareMap.dcMotor.get("turret");
-        //turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+      // turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //turret.setTargetPosition(0);
          //turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -28,11 +29,20 @@ public class Turret {
         turret.setPower(-1 * multi);
     }
     public void turnWithTrigger(double triggerX){
-
         turret.setPower(triggerX * multi);
+    }
+    public void presetTurretSide(){
+        turret.setTargetPosition(0);
+        turret.setPower(.1);
     }
     public void stopTurret(){
         turret.setPower(0);
+
+    }
+    public double getTurretPosition(){
+        int currentPosition = turret.getCurrentPosition();
+        return currentPosition;
+
     }
 }
 

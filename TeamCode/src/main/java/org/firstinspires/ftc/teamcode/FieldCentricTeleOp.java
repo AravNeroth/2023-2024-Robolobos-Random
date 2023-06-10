@@ -32,6 +32,7 @@ public class FieldCentricTeleOp extends OpMode {
     private ElapsedTime runTime;
     private Slides slides;
     private double turnPower;
+    private int limit = 1200;
 
     @Override
     public void init() {
@@ -61,6 +62,8 @@ public class FieldCentricTeleOp extends OpMode {
             telemetry.addData("Arm Motor Target Position: ", arm.getArmMotorTargetPosition());
             telemetry.addData("Arm Motor Power", arm.getArmMotorPower());
             telemetry.addData("Turret Motor Rotation", turnPower);
+            telemetry.addData("Turret Location", turret.getTurretPosition());
+            telemetry.addData("Slides Location", slides.getSlidesPosition());
             telemetry.update();
 
             // this makes GamePadEx work
@@ -70,15 +73,15 @@ public class FieldCentricTeleOp extends OpMode {
             wheels.fieldCentric(pilot);
             wheels.runMotors();
 
-
-            if((sentry.gamepad.right_stick_x > 0 || sentry.gamepad.right_stick_x < 0) && (turnPower <= 100 && turnPower >= -100)){
+            if(sentry.gamepad.right_stick_x > 0 && turret.getTurretPosition() <= limit ){
                 turret.turnWithTrigger(sentry.gamepad.right_stick_x);
-                turnPower +=sentry.gamepad.right_stick_x;
             }
-            //else if(sentry.gamepad.right_stick_x < 0){
-               // turret.turnWithTrigger(sentry.gamepad.right_stick_x);
-                //turnPower += sentry.gamepad.right_stick_x;
-           // }
+            else if(sentry.gamepad.right_stick_x < 0 && turret.getTurretPosition() >= -limit){
+                turret.turnWithTrigger(sentry.gamepad.right_stick_x);
+            }
+           else if(sentry.gamepad.dpad_down){
+                turret.presetTurretSide();
+            }
             else{
                 turret.stopTurret();
             }
@@ -96,6 +99,63 @@ public class FieldCentricTeleOp extends OpMode {
             if(sentry.gamepad.right_bumper){
                 slides.slidesForward();
             }
+            else if(sentry.gamepad.left_bumper){
+                slides.slidesBackward();
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         }

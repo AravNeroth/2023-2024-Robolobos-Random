@@ -15,7 +15,7 @@ public class Arm {
         armMotor = hardwareMap.dcMotor.get("arm");
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // armMotor.setTargetPosition(0);
+        armMotor.setTargetPosition(0);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
@@ -46,14 +46,6 @@ public class Arm {
             public double getArmMotorPower(){
 
                 return armMotor.getPower();
-            }
-            public void setArmMotor(){
-
-                armMotor.setPower(.5);
-            }
-            public void stopArmMotor(){
-
-                armMotor.setPower(0);
             }
 
 
