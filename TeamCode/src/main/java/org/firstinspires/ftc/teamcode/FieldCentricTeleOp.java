@@ -82,6 +82,9 @@ public class FieldCentricTeleOp extends OpMode {
            else if(sentry.gamepad.dpad_down){
                 turret.presetTurretSide();
             }
+           else if(sentry.gamepad.ps){
+               turret.resetTurretEncoder();
+            }
             else{
                 turret.stopTurret();
             }

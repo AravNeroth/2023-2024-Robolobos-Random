@@ -29,17 +29,24 @@ public class Turret {
         turret.setPower(-1 * multi);
     }
     public void turnWithTrigger(double triggerX){
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setPower(triggerX * multi);
     }
     public void presetTurretSide(){
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turret.setTargetPosition(0);
+        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turret.setPower(.1);
     }
     public void stopTurret(){
         turret.setPower(0);
 
     }
+    public void resetTurretEncoder(){
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
     public double getTurretPosition(){
+
         int currentPosition = turret.getCurrentPosition();
         return currentPosition;
 
