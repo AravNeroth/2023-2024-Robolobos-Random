@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import java.lang.Math;
 
 public class Turret {
     private DcMotor turret;
@@ -49,6 +50,18 @@ public class Turret {
 
         int currentPosition = turret.getCurrentPosition();
         return currentPosition;
+
+    }
+
+    public void faze_jarvis() {
+        // assumes (0,0) is in the the top right corner
+        double robot_x = -3;
+        double robot_y = 0;
+
+        double angle = Math.atan(robot_x/robot_y);
+
+
+
 
     }
 }
