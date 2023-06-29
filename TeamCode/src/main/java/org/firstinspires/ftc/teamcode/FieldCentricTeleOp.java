@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
-import org.firstinspires.ftc.teamcode.subsystems.Turrent;
+import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Wheels;
+import org.firstinspires.ftc.teamcode.subsystems.Slides;
 
 /*
     The reason why this class has OpMode instead of LinearOpMode is because
@@ -20,115 +18,88 @@ import org.firstinspires.ftc.teamcode.subsystems.Wheels;
     equivalent would be to update the IMU in the "opModeIsActive" method
  */
 @TeleOp(name="FieldCentricTeleOp", group="DriveModes")
-public abstract class FieldCentricTeleOp extends OpMode {
-
-    double mult = 0.70;
-    // sets controller colors- find in Subsystem ControllerLights
+public class FieldCentricTeleOp extends OpMode {
     private Wheels wheels;
+    private Turret turret;
     private Arm arm;
-    private Claw claw;
-    private Turrent turret;
-    private ControllerFeatures features;
-    
     private GamepadEx pilot, sentry;
     private ElapsedTime runTime;
+    //private Slides slides;
+    private double turnPower;
+    private final int limit = 1200;
+
     @Override
-    public void init(){
-
-        telemetry.addLine("Initializatizing Robot");
-        telemetry.update();
-
+    public void init() {
+        runTime = new ElapsedTime();
 
         pilot = new GamepadEx(gamepad1);
         sentry = new GamepadEx(gamepad2);
+        wheels = new Wheels(hardwareMap);
+        turret = new Turret(hardwareMap);
+        arm = new Arm(hardwareMap);
+        //slides = new Slides(hardwareMap);
 
-        wheels = new Wheels();
-        arm = new Arm();
-        turret = new Turrent();
-        features = new ControllerFeatures();
-        runTime = new ElapsedTime();
-
-        /*
-            when entering in gamepad1 & gamepad 2, it should be used for LED and Rumble only!
-            For getting DATA use the GamepadEx class from FTClib
-            https://docs.ftclib.org/ftclib/features/gamepad-extensions
-
-            for some reason GamepadEx doesn't play nice with Gamepad, even though its a wrapper class
-         */
-
-        features.rumbleOnStart(gamepad1, gamepad2);
-        features.setPink(gamepad1, gamepad2, 120);
-
-        telemetry.addLine("ALl Subsystems & Controllers Actvated");
-        telemetry.addLine("Initialization Completed Successfully.");
-        telemetry.addLine("Time taken: " + getRuntime()+ " seconds.");
+        telemetry.addLine("Initializing Robot");
         telemetry.update();
     }
 
-    public void start(){
+
+    public void start() {
         runTime.reset();
+        telemetry.addLine("Running");
+        telemetry.update();
     }
+
     @Override
     public void loop() {
+        telemetry.addLine("Running loop");
+        telemetry.addData("Arm Motor Target Position: ", arm.getArmMotorTargetPosition());
+        telemetry.addData("Arm Motor Power", arm.getArmMotorPower());
+        telemetry.addData("Turret Motor Rotation", turnPower);
+        telemetry.addData("Turret Location", turret.getTurretPosition());
+        //telemetry.addData("Slides Location", slides.getSlidesPosition());
+        telemetry.update();
 
-        // color
-        features.setPurple(gamepad1, gamepad2, 100000);
-
-        // this makes GamepadEx work
+        // this makes GamePadEx work
         pilot.readButtons();
         sentry.readButtons();
 
-
-        // robot controls
-        // multplier for the wheels- currently running @ 70%
         wheels.fieldCentric(pilot);
-
-        // powering the motors
         wheels.runMotors();
 
-        // speeding controls
-        // if the trigger is pressed halfway, then it'll boost
-        wheels.setMult(features.leftTriggerBoost(pilot));
-
-        // if the trigger is pressed halfway, then it'll slow
-        wheels.setMult(features.rightTriggerSlow(pilot));
-
-        // UNTESTED! Theoretically brakes when the robot motors have no power
-        wheels.passiveBrake();
-
-
-        // Pilot Button Controls
-
-            // manual braking
-        if (pilot.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
-            wheels.manualBrake();
-
-            // IMU reset
-        if(pilot.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-            wheels.resetIMU();
-            features.lightRumble(gamepad1, 100);
+        if (sentry.gamepad.right_stick_x > 0 && turret.getTurretPosition() <= limit) {
+            turret.turnWithTrigger(sentry.gamepad.right_stick_x);
+        } else if (sentry.gamepad.right_stick_x < 0 && turret.getTurretPosition() >= -limit) {
+            turret.turnWithTrigger(sentry.gamepad.right_stick_x);
+        } else if (sentry.gamepad.dpad_down) {
+            turret.presetTurretSide();
+        } else if(sentry.gamepad.ps){
+            turret.resetTurretEncoder();
+        } else {
+            turret.stopTurret();
         }
 
-
-        // Sentry Button Controls
-
-        // turret controls
-        if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
-            turret.turnRight();
-
-
-        if (sentry.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
-            turret.turnLeft();
-
+        if (sentry.gamepad.dpad_right) {
+            arm.armUp();
+        } else if (sentry.gamepad.dpad_left) {
+            arm.armDown();
+        } else if (sentry.gamepad.dpad_up) {
+            arm.armMid();
+        }
+/*
+        if (sentry.gamepad.right_bumper) {
+            slides.slidesForward();
+        } else if (sentry.gamepad.left_bumper) {
+            slides.slidesBackward();
+        }
+       */
     }
 
     @Override
-    public void stop()
-    {
+    public void stop() {
         telemetry.addLine("Robot Shut Down.");
+        telemetry.addLine("Total Runtime: " + runTime + " seconds.");
         telemetry.addLine("Total Runtime: " + runTime + " seconds.");
         telemetry.update();
     }
-
-
 }

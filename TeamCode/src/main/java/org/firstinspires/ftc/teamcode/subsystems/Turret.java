@@ -1,0 +1,68 @@
+package org.firstinspires.ftc.teamcode.subsystems;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import java.lang.Math;
+
+public class Turret {
+    private DcMotor turret;
+    double multi = .5;
+    //double rx = -gamepad.getRightX();
+    static final double MOTOR_TICK_COUNT = 384.5;
+    public Turret(HardwareMap hardwareMap) {
+
+        turret = hardwareMap.dcMotor.get("turret");
+       // turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+      // turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //turret.setTargetPosition(0);
+         //turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
+
+    public void turnRight() {
+        turret.setPower(1 * multi);
+
+    }
+
+    public void turnLeft() {
+
+        turret.setPower(-1 * multi);
+    }
+    public void turnWithTrigger(double triggerX){
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setPower(triggerX * multi);
+    }
+    public void presetTurretSide(){
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turret.setTargetPosition(0);
+        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turret.setPower(.1);
+    }
+    public void stopTurret(){
+        turret.setPower(0);
+
+    }
+    public void resetTurretEncoder(){
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public double getTurretPosition(){
+
+        int currentPosition = turret.getCurrentPosition();
+        return currentPosition;
+
+    }
+
+    public void faze_jarvis() {
+        // assumes (0,0) is in the the top right corner
+        double robot_x = -3;
+        double robot_y = 0;
+
+        double angle = Math.atan(robot_x/robot_y);
+
+
+
+
+    }
+}
+
