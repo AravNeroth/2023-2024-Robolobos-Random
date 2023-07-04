@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Disabled
 @Config
 @TeleOp(name="PID Tuner", group="DriveModes")
 public class PIDTuner extends OpMode {
@@ -17,9 +16,9 @@ public class PIDTuner extends OpMode {
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
 
-    public static int target = 200;
+    public static int target = 0;
 
-    private final double ticks_in_degrees = 384.5/360;
+    private final double ticks_in_degrees = 1425.1/360;
 
     private DcMotor motor;
 
@@ -28,7 +27,7 @@ public class PIDTuner extends OpMode {
         controller = new PIDController(p, i ,d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        motor = hardwareMap.get(DcMotor.class, "turret");
+        motor = hardwareMap.get(DcMotor.class, "arm");
     }
 
     @Override
