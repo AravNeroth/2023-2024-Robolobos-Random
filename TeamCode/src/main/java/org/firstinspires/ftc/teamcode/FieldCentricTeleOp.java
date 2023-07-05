@@ -1,16 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.telecom.TelecomManager;
-
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
-import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Wheels;
 import org.firstinspires.ftc.teamcode.subsystems.Slides;
@@ -22,17 +17,16 @@ import org.firstinspires.ftc.teamcode.subsystems.Slides;
     to constantly update the IMU inside the subsystem. In LinearOpMode, the
     equivalent would be to update the IMU in the "opModeIsActive" method
  */
-@TeleOp(name="FieldCentricTeleOp", group="DriveModes")
+@TeleOp(name="Tele Operational", group="DriveModes")
 public class FieldCentricTeleOp extends OpMode {
     private Wheels wheels;
     private Turret turret;
-
     private Arm arm;
     private GamepadEx pilot, sentry;
     private ElapsedTime runTime;
-    private Slides slides;
-    private double turnPower;
-    private int limit = 1200;
+    private final int MAX_LIMIT = 1200;
+    private final int MIN_LIMIT = -1200;
+    int targetTurretPosition = 0;
 
     @Override
     public void init() {
@@ -43,7 +37,7 @@ public class FieldCentricTeleOp extends OpMode {
         wheels = new Wheels(hardwareMap);
         turret = new Turret(hardwareMap);
         arm = new Arm(hardwareMap);
-        slides = new Slides(hardwareMap);
+        //slides = new Slides(hardwareMap);
 
         telemetry.addLine("Initializing Robot");
         telemetry.update();
@@ -57,111 +51,50 @@ public class FieldCentricTeleOp extends OpMode {
     }
 
     @Override
-        public void loop() {
-            telemetry.addLine("Running loop");
-            telemetry.addData("Arm Motor Target Position: ", arm.getArmMotorTargetPosition());
-            telemetry.addData("Arm Motor Power", arm.getArmMotorPower());
-            telemetry.addData("Turret Motor Rotation", turnPower);
-            telemetry.addData("Turret Location", turret.getTurretPosition());
-            telemetry.addData("Slides Location", slides.getSlidesPosition());
-            telemetry.update();
+    public void loop() {
+        telemetry.addLine("Running loop");
+        telemetry.addData("Arm Motor Target Position: ", arm.getArmMotorTargetPosition());
+        telemetry.addData("Arm Motor Power", arm.getArmMotorPower());
+        telemetry.addData("Turret Location", turret.getTurretPosition());
+        //telemetry.addData("Slides Location", slides.getSlidesPosition());
+        telemetry.update();
 
-            // this makes GamePadEx work
-            pilot.readButtons();
-            sentry.readButtons();
+        // this makes GamePadEx work
+        pilot.readButtons();
+        sentry.readButtons();
 
-            wheels.fieldCentric(pilot);
-            wheels.runMotors();
+        wheels.fieldCentric(pilot);
+        wheels.runMotors();
 
-            if(sentry.gamepad.right_stick_x > 0 && turret.getTurretPosition() <= limit ){
-                turret.turnWithTrigger(sentry.gamepad.right_stick_x);
-            }
-            else if(sentry.gamepad.right_stick_x < 0 && turret.getTurretPosition() >= -limit){
-                turret.turnWithTrigger(sentry.gamepad.right_stick_x);
-            }
-           else if(sentry.gamepad.dpad_down){
-                turret.presetTurretSide();
-            }
-           else if(sentry.gamepad.ps){
-               turret.resetTurretEncoder();
-            }
-            else{
-                turret.stopTurret();
-            }
-
-            if(sentry.gamepad.dpad_right){
-                arm.armUp();
-
-            }
-            else if(sentry.gamepad.dpad_left){
-                arm.armDown();
-            }
-            else if(sentry.gamepad.dpad_up){
-                arm.armMid();
-            }
-            if(sentry.gamepad.right_bumper){
-                slides.slidesForward();
-            }
-            else if(sentry.gamepad.left_bumper){
-                slides.slidesBackward();
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if (sentry.gamepad.y) {
+            targetTurretPosition = 0;
+        } else if (sentry.gamepad.b) {
+            targetTurretPosition = -300;
+        } else if (sentry.gamepad.right_stick_x > 0 && targetTurretPosition < MAX_LIMIT) {
+            targetTurretPosition += 5;
+        } else if (sentry.gamepad.right_stick_x < 0 && targetTurretPosition > MIN_LIMIT) {
+            targetTurretPosition -= 5;
+        } else if (sentry.gamepad.ps) {
+            turret.resetTurretEncoder();
         }
+
+        turret.toMotorPosition(targetTurretPosition);
+
+        /*
+        if (sentry.gamepad.dpad_right) {
+            arm.armUp();
+        } else if (sentry.gamepad.dpad_left) {
+            arm.armDown();
+        } else if (sentry.gamepad.dpad_up) {
+            arm.armMid();
+        }*/
+
+        /*if (sentry.gamepad.right_bumper) {
+            slides.slidesForward();
+        } else if (sentry.gamepad.left_bumper) {
+            slides.slidesBackward();
+        }*/
+    }
 
     @Override
     public void stop() {
