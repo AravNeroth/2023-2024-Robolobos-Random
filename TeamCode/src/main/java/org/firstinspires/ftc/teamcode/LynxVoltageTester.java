@@ -27,7 +27,7 @@ Drive Constant variables during Auton so that it is more consistant
 (i lied abt the type of voltage sensor lmao, i changed my mind after i made the file)
  */
 
-@TeleOp(name="LynxVoltageTester", group="DriveModes")
+@TeleOp(name="VoltageTester", group="DriveModes")
 public class LynxVoltageTester extends LinearOpMode{
 
     // this changes the speed multiplier for wheels
