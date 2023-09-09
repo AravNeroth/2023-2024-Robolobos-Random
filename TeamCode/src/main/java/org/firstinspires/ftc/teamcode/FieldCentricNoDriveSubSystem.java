@@ -43,7 +43,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
         Turrent turrent = new Turrent(turrentRot);
         Arm arm = new Arm(turrentArm);
-        Slides slides = new Slides(slide);
+        //Slides slides = new Slides(slide);
         Claw claw = new Claw(leftClaw, rightClaw);
 
 
