@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.hardware.lynx.LynxVoltageSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -42,14 +44,14 @@ public class LynxVoltageTester extends LinearOpMode{
 
     DcMotorEx motor4;
 
-    Servo axonTest;
+    CRServo axonTest;
     @Override
     public void runOpMode() throws InterruptedException {
 
         DcMotorEx motor4 = (DcMotorEx) hardwareMap.dcMotor.get("motor4");
         motor4.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        Servo axonTest = hardwareMap.servo.get("axon1");
+        CRServo axonTest = hardwareMap.crservo.get("axon1");
 
 
 
@@ -103,10 +105,10 @@ public class LynxVoltageTester extends LinearOpMode{
             // Lu's Axon Servo Testing
 
             if(gamepad1.b)
-                axonTest.setPosition(0.5);
+                axonTest.setPower(0.5);
 
             if(gamepad1.a)
-                axonTest.setPosition(-0.5);
+                axonTest.setPower(-0.5);
 
 
             // ------------- Below is the telementry for voltage ---------------- \\
