@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.hardware.lynx.LynxVoltageSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.acmerobotics.dashboard.*;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.*;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -38,18 +41,24 @@ public class LynxVoltageTester extends LinearOpMode{
     LynxVoltageSensor voltageReader;
 
     DcMotorEx motor4;
+
+    Servo axonTest;
     @Override
     public void runOpMode() throws InterruptedException {
 
         DcMotorEx motor4 = (DcMotorEx) hardwareMap.dcMotor.get("motor4");
         motor4.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
+        Servo axonTest = hardwareMap.servo.get("axon1");
+
+
 
 // ------------- Below is the telementry for voltage ---------------- \\
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
-        telemetry.addLine("Rev Motor Intialized.");
+        telemetry.addLine("Rev Motor Initialized.");
+        telemetry.addLine("Axon Servo Initialized.");
         telemetry.addLine("Qualcomm Voltage Sensor Intializing.");
         telemetry.update();
 
@@ -68,7 +77,7 @@ public class LynxVoltageTester extends LinearOpMode{
         // imports the IMU
         BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        // Technically this is the default, however specifying it is clearer
+        // this is the default & unneeded, however specifying is easier to see the steps
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         // Without this, data retrieving from the IMU throws an exception
         imu.initialize(parameters);
@@ -83,11 +92,22 @@ public class LynxVoltageTester extends LinearOpMode{
 
         clock.reset();
 
+
         waitForStart();
 
         if (isStopRequested()) return;
 
+
         while(opModeIsActive()) {
+
+            // Lu's Axon Servo Testing
+
+            if(gamepad1.b)
+                axonTest.setPosition(0.5);
+
+            if(gamepad1.a)
+                axonTest.setPosition(-0.5);
+
 
             // ------------- Below is the telementry for voltage ---------------- \\
 
@@ -115,9 +135,11 @@ public class LynxVoltageTester extends LinearOpMode{
             telemetry.addData("Motor4 Velocity: ", motor4.getVelocity());
             telemetry.update();
 
+            // this will run the test and return how long it takes
             if(gamepad1.x) {
                 telemetry.addData("Time Taken to Complete: ", timeTest());
                 telemetry.update();
+                motor4.setMotorDisable();
             }
 
         }
