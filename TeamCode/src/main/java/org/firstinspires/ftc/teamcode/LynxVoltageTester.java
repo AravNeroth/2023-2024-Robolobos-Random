@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.acmerobotics.dashboard.*;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.*;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -41,17 +42,33 @@ public class LynxVoltageTester extends LinearOpMode{
 
     ElapsedTime clock;
     LynxVoltageSensor voltageReader;
+    double frontLeftPower, frontRightPower, rearLeftPower, rearRightPower;
 
-    DcMotorEx motor4;
+    //Gamepad gamepad1;
 
-    CRServo axonTest;
+    DcMotorEx motor1, motor2, motor3, motor4;
+
     @Override
     public void runOpMode() throws InterruptedException {
+
+        DcMotorEx motor1 = (DcMotorEx) hardwareMap.dcMotor.get("motor1");
+        motor1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        DcMotorEx motor2 = (DcMotorEx) hardwareMap.dcMotor.get("motor2");
+        motor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        DcMotorEx motor3 = (DcMotorEx) hardwareMap.dcMotor.get("motor3");
+        motor3.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         DcMotorEx motor4 = (DcMotorEx) hardwareMap.dcMotor.get("motor4");
         motor4.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        CRServo axonTest = hardwareMap.crservo.get("axon1");
+
+        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor4.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        //Servo axonTest = hardwareMap.servo.get("axon1");
 
 
 
@@ -102,13 +119,16 @@ public class LynxVoltageTester extends LinearOpMode{
 
         while(opModeIsActive()) {
 
-            // Lu's Axon Servo Testing
+            double leftX = gamepad1.left_stick_x;
+            double leftY = -gamepad1.left_stick_y; 
+            double rightX = gamepad1.right_stick_x;
 
-            if(gamepad1.b)
-                axonTest.setPower(0.5);
-
-            if(gamepad1.a)
-                axonTest.setPower(-0.5);
+            // Calculate motor powers based on joystick input
+            // m1, m2, m3, m4
+            frontLeftPower = leftY - leftX - rightX;
+            frontRightPower = leftY + leftX + rightX;
+            rearLeftPower = leftY + leftX - rightX;
+            rearRightPower = leftY - leftX + rightX;
 
 
             // ------------- Below is the telementry for voltage ---------------- \\
@@ -134,13 +154,20 @@ public class LynxVoltageTester extends LinearOpMode{
             }
 
 
-            telemetry.addData("Motor4 Velocity: ", motor4.getVelocity());
+            telemetry.addData("Motor 1 (FL): ", motor1.getVelocity());
+            telemetry.addData("Motor 2 (FR): ", motor2.getVelocity());
+            telemetry.addData("Motor 3 (BL): ", motor3.getVelocity());
+            telemetry.addData("Motor 4 (BR): ", motor4.getVelocity());
+
             telemetry.update();
 
             // this will run the test and return how long it takes
             if(gamepad1.x) {
-                telemetry.addData("Time Taken to Complete: ", timeTest());
+                telemetry.addData("Time Taken to Run To 500 Ticks: ", timeTest());
                 telemetry.update();
+                motor1.setMotorDisable();
+                motor2.setMotorDisable();
+                motor3.setMotorDisable();
                 motor4.setMotorDisable();
             }
 
@@ -159,14 +186,32 @@ public class LynxVoltageTester extends LinearOpMode{
         return result;
     }
 
-    public long timeTest(){
+    public double timeTest(){
 
+        motor1.setTargetPosition(500);
+        motor2.setTargetPosition(500);
+        motor3.setTargetPosition(500);
         motor4.setTargetPosition(500);
         clock.reset();
+        motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor4.setVelocity(mult);
+        powerMotors();
 
-        return timeTaken;
+        if (!motor1.isBusy())
+            return clock.time();
+
+        return 0.0;
     }
+
+    public void powerMotors(){
+        motor1.setPower(frontLeftPower);
+        motor2.setPower(frontRightPower);
+        motor3.setPower(rearLeftPower);
+        motor4.setPower(rearRightPower);
+
+    }
+
 
 }
