@@ -20,7 +20,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
     // this changes the speed multiplier for wheels
     double mult = 0.75;
     private GamepadEx pilot, sentry;
-
+    double encoderValue;
 
 
     @Override
@@ -33,6 +33,9 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         pilot = new GamepadEx(gamepad1);
         sentry = new GamepadEx(gamepad2);
@@ -56,6 +59,8 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         if (isStopRequested()) return;
 
         while(opModeIsActive()) {
+
+            telemetry.addData("Encoder Position: ", FR.getCurrentPosition());
 
             // sets controller colors- find in Subsystem ControllerLights
             feature.setRainbow(gamepad1, gamepad2);
