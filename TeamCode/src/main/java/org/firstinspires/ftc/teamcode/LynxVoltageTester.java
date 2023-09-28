@@ -77,7 +77,6 @@ public class LynxVoltageTester extends LinearOpMode{
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         telemetry.addLine("Rev Motor Initialized.");
-        telemetry.addLine("Axon Servo Initialized.");
         telemetry.addLine("Qualcomm Voltage Sensor Intializing.");
         telemetry.update();
 
