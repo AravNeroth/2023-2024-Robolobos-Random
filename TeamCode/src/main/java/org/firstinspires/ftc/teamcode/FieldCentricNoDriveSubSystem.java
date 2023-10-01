@@ -26,10 +26,10 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor FL = hardwareMap.dcMotor.get("leftFront");
-        DcMotor BL = hardwareMap.dcMotor.get("leftRear");
-        DcMotor FR = hardwareMap.dcMotor.get("rightFront");
-        DcMotor BR = hardwareMap.dcMotor.get("rightRear");
+        DcMotor FL = hardwareMap.dcMotor.get("fl");
+        DcMotor BL = hardwareMap.dcMotor.get("bl");
+        DcMotor FR = hardwareMap.dcMotor.get("fr");
+        DcMotor BR = hardwareMap.dcMotor.get("bl");
 
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -41,12 +41,12 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         sentry = new GamepadEx(gamepad2);
 
         // imports the IMU
-        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        //BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
+        //BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         // Technically this is the default, however specifying it is clearer
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        //parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         // Without this, data retrieving from the IMU throws an exception
-        imu.initialize(parameters);
+        //imu.initialize(parameters);
 
         ControllerFeatures feature = new ControllerFeatures();
 
@@ -61,13 +61,18 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         while(opModeIsActive()) {
 
             telemetry.addData("Encoder Position: ", FR.getCurrentPosition());
+            telemetry.update();
+
+            if (FR.getCurrentPosition() != -100) {
+                gamepad1.setLedColor(00, 100, 00, 1000);
+            }
 
             // sets controller colors- find in Subsystem ControllerLights
-            feature.setRainbow(gamepad1, gamepad2);
+            //feature.setRainbow(gamepad1, gamepad2);
 
             // imu reset is dpad up
             if (gamepad1.dpad_up) {
-                imu.initialize(parameters);
+                //imu.initialize(parameters);
             }
 
             double y = gamepad1.left_stick_y;
@@ -75,22 +80,22 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
             double rx = -gamepad1.right_stick_x;
 
             // Read inverse IMU heading, as the IMU heading is CW positive
-            double botHeading = -imu.getAngularOrientation().firstAngle;
+            //double botHeading = -imu.getAngularOrientation().firstAngle;
 
-            double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-            double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
+            //double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
+            //double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
-            // the 1 * is for correcting drift btw
+            // the 1 * is for correcting drift  btw
             // variable mult is for the speed multiplier of the motors
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (1 * (rotY + rotX + rx)) / denominator;
-            double backLeftPower = (1 * (rotY - rotX + rx)) / denominator;
-            double frontRightPower = (1 * (rotY - rotX - rx)) / denominator;
-            double backRightPower = (1 * (rotY + rotX - rx)) / denominator;
+           // double frontLeftPower = (1 * (rotY + rotX + rx)) / denominator;
+            //double backLeftPower = (1 * (rotY - rotX + rx)) / denominator;
+            //double frontRightPower = (1 * (rotY - rotX - rx)) / denominator;
+           // double backRightPower = (1 * (rotY + rotX - rx)) / denominator;
 
             // speed is default set to 75%
             // controllers will rumble and speed will be set to max if right trigger is held
@@ -110,10 +115,10 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
             }
 
 
-            FL.setPower(mult * frontLeftPower);
-            BL.setPower(mult * backLeftPower);
-            FR.setPower(mult * frontRightPower);
-            BR.setPower(mult * backRightPower);
+            //FL.setPower(mult * frontLeftPower);
+           // BL.setPower(mult * backLeftPower);
+         //   FR.setPower(mult * frontRightPower);
+           // BR.setPower(mult * backRightPower);
 
         }
 
