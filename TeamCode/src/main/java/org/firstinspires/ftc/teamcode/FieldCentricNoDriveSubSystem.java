@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
+import com.qualcomm.hardware.lynx.LynxVoltageSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import org.firstinspires.ftc.teamcode.subsystems.ControllerFeatures;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 @TeleOp(name="FieldCentricNoDriveSubSystem", group="DriveModes")
 public class FieldCentricNoDriveSubSystem extends LinearOpMode{
@@ -21,6 +23,8 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
     double mult = 0.75;
     private GamepadEx pilot, sentry;
     double encoderValue;
+
+    VoltageSensor voltSensor;
 
 
     @Override
@@ -36,17 +40,10 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
 
         FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
+        voltSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
         pilot = new GamepadEx(gamepad1);
         sentry = new GamepadEx(gamepad2);
-
-        // imports the IMU
-        //BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
-        //BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        // Technically this is the default, however specifying it is clearer
-        //parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        // Without this, data retrieving from the IMU throws an exception
-        //imu.initialize(parameters);
+        
 
         ControllerFeatures feature = new ControllerFeatures();
 
@@ -61,35 +58,9 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
         while(opModeIsActive()) {
 
             telemetry.addData("Encoder Position: ", FR.getCurrentPosition());
+            telemetry.addData("Current Voltage: ", voltSensor.getVoltage());
             telemetry.update();
 
-            
-
-            double y = gamepad1.left_stick_y;
-            double x = -gamepad1.left_stick_x;
-            double rx = -gamepad1.right_stick_x;
-
-            // Read inverse IMU heading, as the IMU heading is CW positive
-            //double botHeading = -imu.getAngularOrientation().firstAngle;
-
-            //double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-            //double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
-
-            // Denominator is the largest motor power (absolute value) or 1
-            // This ensures all the powers maintain the same ratio, but only when
-            // at least one is out of the range [-1, 1]
-            // the 1 * is for correcting drift  btw
-            // variable mult is for the speed multiplier of the motors
-
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-           // double frontLeftPower = (1 * (rotY + rotX + rx)) / denominator;
-            //double backLeftPower = (1 * (rotY - rotX + rx)) / denominator;
-            //double frontRightPower = (1 * (rotY - rotX - rx)) / denominator;
-           // double backRightPower = (1 * (rotY + rotX - rx)) / denominator;
-
-            // speed is default set to 75%
-            // controllers will rumble and speed will be set to max if right trigger is held
-            // controllers will also change lights depending on what trigger is held
 
             if(gamepad1.left_trigger > 0.8){
                 feature.lightRumble(gamepad1, gamepad2, 500);
@@ -99,14 +70,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
                 feature.lightRumble(gamepad1, gamepad2, 500);
             }
 
-            else{
-            }
 
-
-            //FL.setPower(mult * frontLeftPower);
-           // BL.setPower(mult * backLeftPower);
-         //   FR.setPower(mult * frontRightPower);
-           // BR.setPower(mult * backRightPower);
 
         }
 
