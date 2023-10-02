@@ -63,17 +63,7 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
             telemetry.addData("Encoder Position: ", FR.getCurrentPosition());
             telemetry.update();
 
-            if (FR.getCurrentPosition() != -100) {
-                gamepad1.setLedColor(00, 100, 00, 1000);
-            }
-
-            // sets controller colors- find in Subsystem ControllerLights
-            //feature.setRainbow(gamepad1, gamepad2);
-
-            // imu reset is dpad up
-            if (gamepad1.dpad_up) {
-                //imu.initialize(parameters);
-            }
+            
 
             double y = gamepad1.left_stick_y;
             double x = -gamepad1.left_stick_x;
@@ -102,16 +92,14 @@ public class FieldCentricNoDriveSubSystem extends LinearOpMode{
             // controllers will also change lights depending on what trigger is held
 
             if(gamepad1.left_trigger > 0.8){
-                mult = 1;
                 feature.lightRumble(gamepad1, gamepad2, 500);
             }
 
             else if(gamepad1.right_trigger > 0.8){
-                mult = 0.5;
+                feature.lightRumble(gamepad1, gamepad2, 500);
             }
 
             else{
-                mult = 0.75;
             }
 
 
