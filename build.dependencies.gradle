@@ -24,6 +24,7 @@ dependencies {
 
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.9'
     implementation 'com.github.RR-9527:robot-code-v2:0.4.1'
+    implementation 'org.openftc:easyopencv:1.7.0'
 
 }
 
