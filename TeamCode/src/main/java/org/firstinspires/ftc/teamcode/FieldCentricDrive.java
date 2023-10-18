@@ -25,57 +25,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="FieldCentricDrive", group="DriveModes")
 public abstract class FieldCentricDrive extends OpMode {
 
-    double mult = 0.70;
-    // sets controller colors- find in Subsystem ControllerLights
-    ControllerFeatures features = new ControllerFeatures();
-    Wheels wheels = new Wheels();
-    //private VoltageReader voltage;
-    private ElapsedTime runTime;
     @Override
     public void init(){
-        runTime = new ElapsedTime();
 
-
-        features.rumbleOnStart(gamepad1, gamepad2);
-        features.setRainbow(gamepad1, gamepad2);
-
-        // this aint working fsr
-    //    voltage = new VoltageReader(hardwareMap);
-
-        telemetry.addLine("Initialization Completed Successfully.");
-        telemetry.addLine("Time taken: " + getRuntime()+ " seconds.");
-        telemetry.update();
     }
 
     @Override
     public void loop()
     {
-        if(gamepad1.left_trigger > 1){
-            mult = 1;
-            features.lightRumble(gamepad1, gamepad2, 100);
-        }
 
-        else if(gamepad1.right_trigger > 1){
-            mult = 0.5;
-        }
-
-        else{
-            mult = 0.70;
-        }
-
-        if(gamepad1.dpad_up){
-        }
-        // multplier for the wheels- currently running @ 70%
-        wheels.fieldCentric(mult);
 
     }
 
     @Override
     public void stop()
     {
-        telemetry.addLine("Robot Stopped.");
-        telemetry.addLine("Total Runtime: " + getRuntime() + " seconds.");
-        telemetry.update();
+
     }
 
 

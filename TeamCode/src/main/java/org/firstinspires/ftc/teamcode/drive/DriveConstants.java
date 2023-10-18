@@ -57,42 +57,4 @@ public class DriveConstants {
     public static double kA = 0; // Volts * Seconds^2 / Meters.
     public static double kStatic = 0; // Volts
 
-    /*
-     * These values are used to generate the trajectories for you robot. To ensure proper operation,
-     * the constraints should never exceed ~80% of the robot's actual capabilities. While Road
-     * Runner is designed to enable faster autonomous motion, it is a good idea for testing to start
-     * small and gradually increase them later after everything is working. All distance units are
-     * inches.
-     */
-
-
-    // theoretically should be 86ish, but due to battery levels and other real world things,
-    // so always make Max Vel to be something the robot can hit consistently
-    // use the Max Vel tuner on the dashboard and multiply it by 0.9
-    public static double MAX_VEL = 40;
-    public static double MAX_ACCEL = 40;
-    public static double MAX_ANG_VEL = Math.toRadians(180);
-    public static double MAX_ANG_ACCEL = Math.toRadians(180);
-
-    /*
-     * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
-     */
-    public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR =
-            RevHubOrientationOnRobot.LogoFacingDirection.UP;
-    public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR =
-            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
-
-
-    public static double encoderTicksToInches(double ticks) {
-        return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
-    }
-
-    public static double rpmToVelocity(double rpm) {
-        return rpm * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0;
-    }
-
-    public static double getMotorVelocityF(double ticksPerSecond) {
-        // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
-        return 32767 / ticksPerSecond;
-    }
 }
