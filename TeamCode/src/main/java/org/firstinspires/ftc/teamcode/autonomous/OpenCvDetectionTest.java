@@ -21,9 +21,22 @@ public class OpenCvDetectionTest extends LinearOpMode {
                 .createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         Detection detector = new Detection(telemetry);
         phoneCam.setPipeline(detector);
-        phoneCam.openCameraDeviceAsync(
-                () -> phoneCam.openCameraDeviceAsync(() -> phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT));
-        );
+
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+                telemetry.addLine("Camera failed to start streaming; Caught Error on line 28.");
+                telemetry.update();
+            }
+        });
 
         waitForStart();
         switch (detector.getLocation()) {
